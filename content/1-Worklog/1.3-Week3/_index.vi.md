@@ -5,55 +5,31 @@ weight: 1
 chapter: false
 pre: " <b> 1.3. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
 
 ### Mục tiêu tuần 3:
+* Nhanh chóng hoàn thành FE, tối thiểu là trang cửa hàng - sản phẩm
+* Thực hiện BE trên các uml 
+* Thực hành deploy code mẫu theo hướng dẫn tài liệu đã tìm kiếm
 
-* Kết nối, làm quen với các thành viên trong First Cloud AI Journey.
-* Hiểu dịch vụ AWS cơ bản, cách dùng console & CLI.
 
 ### Các công việc cần triển khai trong tuần này:
-| Thứ | Công việc                                                                                                                                                                                   | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu                            |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | ----------------------------------------- |
-| 2   | - Làm quen với các thành viên FCAJ <br> - Đọc và lưu ý các nội quy, quy định tại đơn vị thực tập                                                                                             | 11/08/2025   | 11/08/2025      |
-| 3   | - Tìm hiểu AWS và các loại dịch vụ <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                            | 12/08/2025   | 12/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Tạo AWS Free Tier account <br> - Tìm hiểu AWS Console & AWS CLI <br> - **Thực hành:** <br>&emsp; + Tạo AWS account <br>&emsp; + Cài AWS CLI & cấu hình <br> &emsp; + Cách sử dụng AWS CLI | 13/08/2025   | 13/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Tìm hiểu EC2 cơ bản: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Các cách remote SSH vào EC2 <br> - Tìm hiểu Elastic IP   <br>                  | 14/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Thực hành:** <br>&emsp; + Tạo EC2 instance <br>&emsp; + Kết nối SSH <br>&emsp; + Gắn EBS volume                                                                                         | 15/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
 
+| Thứ tự | Công việc | Ngày bắt đầu | Thời gian dự kiến |
+| :-: | :--- | :-: | :-: |
+| **1** | - Hoàn thiện web thô (đặc biệt là Views trong MVC) và demo trên XAMPP <br> - Gợi ý: dựa trên UI các web site mẫu kết hợp các AI tích hợp để phát triển nhanh nhất | `29/06/2026` | 3 ngày |
+| **1.1** | - Mở rộng các trang tĩnh như FAQ hay News | `29/06/2026` | Mỗi ngày |
+| **2** | - Tận dụng template MVC của các Assignment cũ, phát triển Controller và Core trong MVC ( Nhiệm vụ BE ) | `2/07/2026` | 3 ngày |
+| **3** | - Học thêm các dịch vụ phụ trợ: AWS IAM, Cognito (phục vụ tính năng đăng nhập bằng Google), tạo thêm elastic IP và xây dựng HTTPS qua dịch vụ thứ 3 DuckDNS | `3/7/2026' | 1 ngày |
 
 ### Kết quả đạt được tuần 3:
 
-* Hiểu AWS là gì và nắm được các nhóm dịch vụ cơ bản: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
+* Chạy được tính năng cốt lõi của dự án: trang sản phẩm - giỏ hàng trên localhost
+* Thành công tái sử dụng mã nguồn MVC phát triển nhanh dự án 
 
-* Đã tạo và cấu hình AWS Free Tier account thành công.
+### Điểm trừ
 
-* Làm quen với AWS Management Console và biết cách tìm, truy cập, sử dụng dịch vụ từ giao diện web.
+* Đây là đánh đổi từ kiến trúc đã chọn: 
 
-* Cài đặt và cấu hình AWS CLI trên máy tính bao gồm:
-  * Access Key
-  * Secret Key
-  * Region mặc định
-  * ...
+* khả năng mở rộng (phù hợp với khách hàng là startup nhỏ: thuần bán hàng thay vì nhiều nghiệp vụ logic như các big-tech) 
 
-* Sử dụng AWS CLI để thực hiện các thao tác cơ bản như:
-
-  * Kiểm tra thông tin tài khoản & cấu hình
-  * Lấy danh sách region
-  * Xem dịch vụ EC2
-  * Tạo và quản lý key pair
-  * Kiểm tra thông tin dịch vụ đang chạy
-  * ...
-
-* Có khả năng kết nối giữa giao diện web và CLI để quản lý tài nguyên AWS song song.
-* ...
-
-
+* chịu tải hệ thống sẽ kém đi ( vì các nghiệp vụ mua bán trong giờ cao điểm nhẽ ra nên được lambda phụ trách lại được kiến trúc MVC nhiều lớp trong EC2 xử lí gây quá tải CPU RAM ) - vấn đề đã đề cập ở tuần 1

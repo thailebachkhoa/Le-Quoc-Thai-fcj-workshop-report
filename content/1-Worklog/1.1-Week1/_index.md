@@ -5,53 +5,41 @@ weight: 1
 chapter: false
 pre: " <b> 1.1. </b> "
 ---
-{{% notice warning %}} 
-⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
+
 
 
 ### Week 1 Objectives:
 
-* Connect and get acquainted with members of First Cloud AI Journey.
-* Understand basic AWS services, how to use the console & CLI.
+* Research documentation related to cloud computing relevant to the program
+* Have an initial UI sketch/draft
+* Select the technology and architecture for the project
+* Build a study plan / roadmap spanning the 6–8 week internship
 
 ### Tasks to be carried out this week:
-| Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCAJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 08/11/2025 | 08/11/2025      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 08/12/2025 | 08/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 08/13/2025 | 08/13/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/14/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 08/15/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-
+| No. | Task | Estimated Time |
+| --- | --- | --- |
+| 1 | - Read and update on internal rules and regulations at the host unit <br> - Research documentation on Cloud Computing (AWS) | Daily |
+| 2 | - Proactively consult senior students/social media to build an AWS learning roadmap | 1 day |
+| 3 | - Create an AWS account and claim the $200 free credit <br> - Choose a topic and reference similar projects | 1 day |
+| 4 | - Learn EC2 basics: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Methods for remote SSH into EC2 <br> - Learn about Elastic IP | 1 week |
+| 5 | - Develop ideas for the interface <br> - Review the Ubuntu CLI environment (the OS to be chosen on EC2) <br> - Demo a static website using Elastic IP | 1 week |
 
 ### Week 1 Achievements:
 
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
+* **Research & Classification of AWS Services:**
+  * **Core Services:** `EC2`, `Lambda` (Compute); `S3`, `EBS` (Storage); `VPC`, `Route 53` (Networking); `RDS`, `DynamoDB` (Database); `IAM` (Security).
+  * **Supporting Services:** `ELB`, `Auto Scaling`, `CloudFront`, `ElastiCache`, `CloudWatch`, `CloudTrail`, `SQS`, `SNS`.
+  * **Specialized Services:** `SageMaker`, `Redshift`, `ECS`, `EKS`, `CodePipeline`, ...
+* **Environment Initialization & Configuration:**
+  * Successfully registered an **AWS Free Tier** account with $200 in free credit
+  * Became familiar with and used the **AWS Management Console** to access and manage services via the web interface.
+* **Built an onboarding roadmap**: EC2 -> RDS prioritized first — sufficient to deploy a basic website
+* **Built the UI structure based on sample websites**: reference sources <br>
+** thegioihoa.net
+** https://caycanhdian.com/
+** https://rlc.vn/
+** https://www.cayxanhdep.vn/
 
-* Successfully created and configured an AWS Free Tier account.
+- **Tech Stack Selection:** <br> &emsp; 🛠️ *Pure PHP (No Framework)* <br> &emsp; 🛠️ *MySQL* <br> &emsp; 🛠️ *Standard MVC Architecture (prioritizing rapid project development)*
 
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
-
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
-
-* Used AWS CLI to perform basic operations such as:
-
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
-
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
+* Self-assessment: Haven't yet learned AWS CLI and Lambda, so the project's core architecture is tightly fixed to EC2 -> will face difficulties with scalability

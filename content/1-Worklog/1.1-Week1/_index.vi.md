@@ -34,7 +34,12 @@ pre: " <b> 1.1. </b> "
   * Đăng ký thành công tài khoản **AWS Free Tier** với 200$ miễn phí
   * Làm quen và sử dụng **AWS Management Console** để truy cập, quản lý các dịch vụ trên giao diện web.
 * **Xây dựng được Roadmap cho nhập môn**: EC2 -> RDS được ưu tiên đầu - đủ để deploy một web cơ bản
-* **Xây dựng được cấu trúc UI từ các web mẫu**: nguồn tham khảo - 
+* **Xây dựng được cấu trúc UI từ các web mẫu**: nguồn tham khảo <br>
+** thegioihoa.net
+** https://caycanhdian.com/
+** https://rlc.vn/
+** https://www.cayxanhdep.vn/
+* **Lựa chọn công nghệ**: thuần PHP (không framework), Mysql và Kiến trúc MVC phổ thông ( ưu tiên theo tốc độ phát triển dự án )
 
-Đánh giá cá nhân: Điểm trừ tuần đầu là không 
+* Đánh giá cá nhân: Chưa học được AWS Cli và Lambda nên kiến trúc lõi dự án bị cố định chặt vào ec2 -> sẽ gặp khó trong vấn đề mở rộng
 
