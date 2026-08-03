@@ -9,48 +9,20 @@ pre: " <b> 1.4. </b> "
 
 ### Mục tiêu tuần 4:
 
-* Kết nối, làm quen với các thành viên trong First Cloud AI Journey.
-* Hiểu dịch vụ AWS cơ bản, cách dùng console & CLI.
+* Sửa lỗi và hoàn chỉnh codebase 
+* Hoàn thành chạy thành công trên localhost
 
 ### Các công việc cần triển khai trong tuần này:
-| Thứ | Công việc | Ngày bắt đầu | Thời gian dự kiến |
-| :-: | :--- | :-: | :-: |
-| **2** | - Làm quen với các thành viên FCAJ <br> - Đọc và lưu ý các nội quy, quy định tại đơn vị thực tập | `11/08/2025` | `11/08/2025` |
-| **3** | - Tìm hiểu AWS và các loại dịch vụ: <br> &emsp; 🔹 *Compute* <br> &emsp; 🔹 *Storage* <br> &emsp; 🔹 *Networking* <br> &emsp; 🔹 *Database* <br> &emsp; 🔹 *...* | `12/08/2025` | `12/08/2025` |
-| **4** | - Tạo AWS Free Tier account <br> - Tìm hiểu AWS Console & AWS CLI <br> - **Thực hành:** <br> &emsp; 🔹 *Tạo AWS account* <br> &emsp; 🔹 *Cài AWS CLI & cấu hình* <br> &emsp; 🔹 *Cách sử dụng AWS CLI* | `13/08/2025` | `13/08/2025` |
-| **5** | - Tìm hiểu EC2 cơ bản: <br> &emsp; 🔹 *Instance types* <br> &emsp; 🔹 *AMI* <br> &emsp; 🔹 *EBS* <br> &emsp; 🔹 *...* <br> - Các cách remote SSH vào EC2 <br> - Tìm hiểu Elastic IP | `14/08/2025` | `15/08/2025` |
-| **6** | - **Thực hành:** <br> &emsp; 🔹 *Tạo EC2 instance* <br> &emsp; 🔹 *Kết nối SSH* <br> &emsp; 🔹 *Gắn EBS volume* | `15/08/2025` | `15/08/2025` |
+| Thứ tự | Công việc | Thời gian ước tính |
+| --- | --- | --- |
+| 1 | - Tiếp tục hoàn thiện Backend  | 7 ngày |
+| 2 | - Tiếp tục mở rộng các trang web tĩnh, tính năng phụ | 7 ngày |
+| 3 | - Học cách tích hợp Lambda + EventBridge nhằm tắt EC2 theo lịch | 1 ngày |
 
 
 ### Kết quả đạt được tuần 4:
 
-* Hiểu AWS là gì và nắm được các nhóm dịch vụ cơ bản: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
+* Đã hoàn thiện sản phẩm chạy trên máy cá nhân
 
-* Đã tạo và cấu hình AWS Free Tier account thành công.
-
-* Làm quen với AWS Management Console và biết cách tìm, truy cập, sử dụng dịch vụ từ giao diện web.
-
-* Cài đặt và cấu hình AWS CLI trên máy tính bao gồm:
-  * Access Key
-  * Secret Key
-  * Region mặc định
-  * ...
-
-* Sử dụng AWS CLI để thực hiện các thao tác cơ bản như:
-
-  * Kiểm tra thông tin tài khoản & cấu hình
-  * Lấy danh sách region
-  * Xem dịch vụ EC2
-  * Tạo và quản lý key pair
-  * Kiểm tra thông tin dịch vụ đang chạy
-  * ...
-
-* Có khả năng kết nối giữa giao diện web và CLI để quản lý tài nguyên AWS song song.
-* ...
-
+### Điểm trừ:
 

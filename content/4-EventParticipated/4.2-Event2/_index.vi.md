@@ -6,11 +6,9 @@ chapter: false
 pre: " <b> 4.2. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
 
-# Bài thu hoạch “GenAI-powered App-DB Modernization workshop”
+
+# Bài thu hoạch “
 
 ### Mục Đích Của Sự Kiện
 
@@ -21,17 +19,19 @@ pre: " <b> 4.2. </b> "
 
 ### Danh Sách Diễn Giả
 
-- **Jignesh Shah** - Director, Open Source Databases
-- **Erica Liu** - Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** - Assc. Specialist SA, Serverless Amazon Web Services
+- **Nguyễn Huỳnh Sơn**: Cựu SV HUFLIT, Dev tại Endava
+- **Ngo Le Tan Huy** - FCAJ Admin
+- **Thinh Nguyen** - FCAJ Admin
 
 ### Nội Dung Nổi Bật
 
-#### Đưa ra các ảnh hưởng tiêu cực của kiến trúc ứng dụng cũ
+#### SLA và điều phối SLA
 
-- Thời gian release sản phẩm lâu → Mất doanh thu/bỏ lỡ cơ hội
-- Hoạt động kém hiệu quả → Mất năng suất, tốn kém chi phí
-- Không tuân thủ các quy định về bảo mật → Mất an ninh, uy tín
+- SLA: Service Level Agreement - là cam kết của đội kĩ thuật với khách hàng non-tech -> Là một phần quan trọng của quản lí dự án
+- Kim tự tháp về điều phối một dự án:<br> UX (Trải nghiệm người dùng) -> Nghiệp vụ kinh doanh (khách hàng tổ chức) -> Ứng dụng ( Dev quản lí) -> Hạ tầng ( CPU - RAM, ... ) -> Nhà cung cấp dịch vụ Cloud ( AWS, GG Cloud, Asure )
+- Điểm vàng của bài này chính là khẩu hiệu "Ứng dụng thường là phần fresher tập trung nhất và phình to nhất trong một kim tự tháp trong khi số 1 phải là UX"
+- Trích dẫn lời khuyên của cựu CTO AWS: "Plan for failing as things fall all time"
+- Trong quá trình thuyết trình, speaker Sơn có chia sẻ ví dụ một case điển hình: lỗi luôn xảy ra bất kì đâu, một update nhỏ dẫn đến sai số hệ thống. Dev phải có trách nhiệm hỗ trợ trong thời gian ngắn ( điều này chính speaker chia sẻ là áp lực nhất trong job cũ của anh ) 
 
 #### Chuyển đổi sang kiến trúc ứng dụng mới - Microservice Architecture
 

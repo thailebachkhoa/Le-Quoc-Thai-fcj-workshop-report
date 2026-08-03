@@ -6,121 +6,41 @@ chapter: false
 pre: " <b> 4.1. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy it verbatim** into your report, including this warning.
-{{% /notice %}}
 
-# Summary Report: “GenAI-powered App-DB Modernization workshop”
+# Report on "Agentic AI Build Week"
 
-### Event Objectives
+### List of Speakers
+#### Below is the list of teams who participated in the hackathon as speakers:
 
-- Share best practices in modern application design
-- Introduce Domain-Driven Design (DDD) and event-driven architecture
-- Provide guidance on selecting the right compute services
-- Present AI tools to support the development lifecycle
+- **Team 3KA** -
+- **One Team** 
+- **Team Plan V**
+- **Dream Team**
 
-### Speakers
-
-- **Jignesh Shah** – Director, Open Source Databases
-- **Erica Liu** – Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** – Assc. Specialist SA, Serverless Amazon Web Services
-
-### Key Highlights
-
-#### Identifying the drawbacks of legacy application architecture
-
-- Long product release cycles → Lost revenue/missed opportunities  
-- Inefficient operations → Reduced productivity, higher costs  
-- Non-compliance with security regulations → Security breaches, loss of reputation  
-
-#### Transitioning to modern application architecture – Microservices
-
-Migrating to a modular system — each function is an **independent service** communicating via **events**, built on three core pillars:
-
-- **Queue Management**: Handle asynchronous tasks  
-- **Caching Strategy**: Optimize performance  
-- **Message Handling**: Flexible inter-service communication  
-
-#### Domain-Driven Design (DDD)
-
-- **Four-step method**: Identify domain events → arrange timeline → identify actors → define bounded contexts  
-- **Bookstore case study**: Demonstrates real-world DDD application  
-- **Context mapping**: 7 patterns for integrating bounded contexts  
-
-#### Event-Driven Architecture
-
-- **3 integration patterns**: Publish/Subscribe, Point-to-point, Streaming  
-- **Benefits**: Loose coupling, scalability, resilience  
-- **Sync vs async comparison**: Understanding the trade-offs  
-
-#### Compute Evolution
-
-- **Shared Responsibility Model**: EC2 → ECS → Fargate → Lambda  
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value  
-- **Functions vs Containers**: Criteria for appropriate choice  
-
-#### Amazon Q Developer
-
-- **SDLC automation**: From planning to maintenance  
-- **Code transformation**: Java upgrade, .NET modernization  
-- **AWS Transform agents**: VMware, Mainframe, .NET migration  
+### Highlights
+- With Team 3KA, I saw how the team handled time pressure and dealt with the problem of lacking specialized skills. 3KA didn't focus on problem-solving techniques or the latest architecture/technology; throughout the talk, the most memorable line I took away was: "Just try it — I don't have an AI background and went through a health and mental crisis, but our team still gave it a shot, because I'm still young."
+- With OneTeam, I got an idea for an "AI for Everywhere" integration feature. The project is a ChatGPT-like workspace where McDonald's users can communicate with AWS Bedrock to place orders. The Zalo integration feature demoed felt very sleek and fresh for customers. <br> - The basic architecture takes input from Zalo, and channel adapters process it into standardized templates to communicate with Bedrock and return responses. <br> - However, in my personal assessment, this project relies heavily on the coding effort of building templates to communicate with Bedrock for CRUD operations on the order list, which requires a very high level of knowledge and effort — plus a large sample dataset if scaling to a big menu. <br> - The project could also be more cost-effective using open-source projects from Alibaba or DeepSeek, where the AI only needs to be specialized "just enough" and tokens are cheap.
+- With Team PlanV, this project carries deep technical depth, building an AI to assist with architecture design for projects. <br> - Based on personal discussion, the workflow-based success of the project depends heavily on the "black box" (private policies or secret references).
+- With Dreamteam, the group talked about how they managed the project, centered on 3 core points: clear goals, "working code is better than an unfinished project," and strong teamwork.
 
 ### Key Takeaways
 
-#### Design Mindset
+#### Crisis-handling mindset
 
-- **Business-first approach**: Always start from the business domain, not the technology  
-- **Ubiquitous language**: Importance of a shared vocabulary between business and tech teams  
-- **Bounded contexts**: Identifying and managing complexity in large systems  
+- Try breaking the problem down into sub-problems (this is the problem-solving mindset I've always tried to apply since my school days)
+- Divide work reasonably
+- Be clear, and set a plan toward the goal
+- Track progress on the project's success
 
-#### Technical Architecture
+#### Confidence
+- I felt this directly from how the speakers presented: "Showing up is already half of victory" - 3KA
+- "Just try — register for every hackathon, because the biggest reward is your own participation"
 
-- **Event storming technique**: Practical method for modeling business processes  
-- Use **event-driven communication** instead of synchronous calls  
-- **Integration patterns**: When to use sync, async, pub/sub, streaming  
-- **Compute spectrum**: Criteria for choosing between VM, containers, and serverless  
+#### OneTeam's idea for AI-on-everywhere integration:
+- For my own workshop project, if I had more time, I would integrate "Knowledge Bases for Amazon Bedrock" to build a RAG chatbot
 
-#### Modernization Strategy
+#### "AI's intelligence" depends on the input material:
+- This is a personal observation based on analyzing the common thread across the 4 projects above — imagine AI as a human with a silicon brain: the more sufficient information you give it, the more knowledge, the more connections between knowledge (similar to how neurons work), the more effectively the AI performs.
 
-- **Phased approach**: No rushing — follow a clear roadmap  
-- **7Rs framework**: Multiple modernization paths depending on the application  
-- **ROI measurement**: Cost reduction + business agility  
 
-### Applying to Work
-
-- **Apply DDD** to current projects: Event storming sessions with business teams  
-- **Refactor microservices**: Use bounded contexts to define service boundaries  
-- **Implement event-driven patterns**: Replace some sync calls with async messaging  
-- **Adopt serverless**: Pilot AWS Lambda for suitable use cases  
-- **Try Amazon Q Developer**: Integrate into the dev workflow to boost productivity  
-
-### Event Experience
-
-Attending the **“GenAI-powered App-DB Modernization”** workshop was extremely valuable, giving me a comprehensive view of modernizing applications and databases using advanced methods and tools. Key experiences included:
-
-#### Learning from highly skilled speakers
-- Experts from AWS and major tech organizations shared **best practices** in modern application design.  
-- Through real-world case studies, I gained a deeper understanding of applying **DDD** and **Event-Driven Architecture** to large projects.  
-
-#### Hands-on technical exposure
-- Participating in **event storming** sessions helped me visualize how to **model business processes** into domain events.  
-- Learned how to **split microservices** and define **bounded contexts** to manage large-system complexity.  
-- Understood trade-offs between **synchronous and asynchronous communication** and integration patterns like **pub/sub, point-to-point, streaming**.  
-
-#### Leveraging modern tools
-- Explored **Amazon Q Developer**, an AI tool for SDLC support from planning to maintenance.  
-- Learned to **automate code transformation** and pilot serverless with **AWS Lambda** to improve productivity.  
-
-#### Networking and discussions
-- The workshop offered opportunities to exchange ideas with experts, peers, and business teams, enhancing the **ubiquitous language** between business and tech.  
-- Real-world examples reinforced the importance of the **business-first approach** rather than focusing solely on technology.  
-
-#### Lessons learned
-- Applying DDD and event-driven patterns reduces **coupling** while improving **scalability** and **resilience**.  
-- Modernization requires a **phased approach** with **ROI measurement**; rushing the process can be risky.  
-- AI tools like Amazon Q Developer can significantly **boost productivity** when integrated into the current workflow.  
-
-#### Some event photos
-*Add your event photos here*  
-
-> Overall, the event not only provided technical knowledge but also helped me reshape my thinking about application design, system modernization, and cross-team collaboration.
+### Some photos from the event
