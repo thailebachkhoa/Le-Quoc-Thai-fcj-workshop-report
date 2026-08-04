@@ -6,51 +6,28 @@ chapter: false
 pre: " <b> 1.5. </b> "
 ---
 
-
-
 ### Week 5 Objectives:
 
-* Connect and get acquainted with members of First Cloud AI Journey.
-* Understand basic AWS services, how to use the console & CLI.
+* Provision real AWS infrastructure (EC2, RDS) to replace localhost
+* Ship the first live deployment of the website, with a domain and HTTPS
+* Set up a deployment workflow from GitHub to EC2
 
 ### Tasks to be carried out this week:
 
-| No. | Task | Estimated Time |
-| --- | --- | --- |
-| 1 | - Read and update on internal rules and regulations at the host unit <br> - Research documentation on Cloud Computing (AWS) | Daily |
-| 2 | - Proactively consult senior students/social media to build an AWS learning roadmap | 1 day |
-| 3 | - Create an AWS account and claim the $200 free credit <br> - Choose a topic and reference similar projects | 1 day |
-| 4 | - Learn EC2 basics: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Methods for remote SSH into EC2 <br> - Learn about Elastic IP | 1 week |
-| 5 | - Develop ideas for the interface <br> - Review the Ubuntu CLI environment (the OS to be chosen on EC2) <br> - Demo a static website using Elastic IP | 1 week |
-
+| No. | Task | Start Date | Estimated Time |
+| :-: | :--- | :-: | :-: |
+| **1** | - Provision an EC2 instance (Ubuntu, t4g.micro), configure the Security Group (open ports 80/443/22) <br> - Install Apache + PHP 8 on EC2 | `06/07/2026` | 2 days |
+| **2** | - Provision Amazon RDS (MySQL 8.4, t4g.micro), configure the Security Group to allow EC2 to connect to RDS <br> - Import schema.sql into RDS | `08/07/2026` | 1 day |
+| **3** | - Register a free domain via DuckDNS, point it to the EC2 Elastic IP <br> - Configure HTTPS (Let's Encrypt/certbot) | `09/07/2026` | 1 day |
+| **4** | - Deploy the code from GitHub to EC2 (git clone/git pull), configure `.env`, test the full flow that already worked on localhost | `10/07/2026` | 2 days |
 
 ### Week 5 Achievements:
 
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
+* The website is live on the real internet at `i-love-fcaj.duckdns.org`, with valid HTTPS.
+* Compute (EC2) and database (RDS) are separated instead of running on a single machine — easier to back up and scale each part independently later on.
+* Established a manual deployment workflow: edit code -> push to GitHub -> SSH into EC2 -> `git pull` -> restart Apache.
 
-* Successfully created and configured an AWS Free Tier account.
+### Limitations:
 
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
-
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
-
-* Used AWS CLI to perform basic operations such as:
-
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
-
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
+* Deployment is entirely manual, with no CI/CD yet — every code update requires repeating all the steps by hand, and it's easy to forget a step (e.g., forgetting to reset the `www-data` file ownership after pulling), which caused a few minor issues that had to be resolved in Week 7.
+* RDS is currently configured as Single-AZ with only a 1-day backup retention — sufficient for the demo stage, but not yet up to production standards.

@@ -6,14 +6,12 @@ chapter: false
 pre: " <b> 1.1. </b> "
 ---
 
-
-
 ### Week 1 Objectives:
 
 * Research documentation related to cloud computing relevant to the program
 * Have an initial UI sketch/draft
 * Select the technology and architecture for the project
-* Build a study plan / roadmap spanning the 6–8 week internship
+* Build a study plan / roadmap spanning the full 8-week internship
 
 ### Tasks to be carried out this week:
 | No. | Task | Estimated Time |
@@ -26,20 +24,21 @@ pre: " <b> 1.1. </b> "
 
 ### Week 1 Achievements:
 
-* **Research & Classification of AWS Services:**
+* **Research & classification of AWS services:**
   * **Core Services:** `EC2`, `Lambda` (Compute); `S3`, `EBS` (Storage); `VPC`, `Route 53` (Networking); `RDS`, `DynamoDB` (Database); `IAM` (Security).
   * **Supporting Services:** `ELB`, `Auto Scaling`, `CloudFront`, `ElastiCache`, `CloudWatch`, `CloudTrail`, `SQS`, `SNS`.
   * **Specialized Services:** `SageMaker`, `Redshift`, `ECS`, `EKS`, `CodePipeline`, ...
-* **Environment Initialization & Configuration:**
-  * Successfully registered an **AWS Free Tier** account with $200 in free credit
+* **Environment initialization & configuration:**
+  * Successfully registered an **AWS Free Tier** account with $200 in free credit.
   * Became familiar with and used the **AWS Management Console** to access and manage services via the web interface.
-* **Built an onboarding roadmap**: EC2 -> RDS prioritized first — sufficient to deploy a basic website
-* **Built the UI structure based on sample websites**: reference sources <br>
-** thegioihoa.net
-** https://caycanhdian.com/
-** https://rlc.vn/
-** https://www.cayxanhdep.vn/
+* **Built an onboarding roadmap**: EC2 -> RDS prioritized first — sufficient to deploy a basic website; advanced services (Cognito, Lambda...) to be learned in later weeks.
+* **Built the UI structure based on sample websites**, reference sources:
+  * thegioihoa.net
+  * https://caycanhdian.com/
+  * https://rlc.vn/
+  * https://www.cayxanhdep.vn/
+* **Tech stack selection**: Pure PHP (no framework), MySQL, standard MVC architecture — prioritizing rapid development given the short internship timeline.
 
-- **Tech Stack Selection:** <br> &emsp; 🛠️ *Pure PHP (No Framework)* <br> &emsp; 🛠️ *MySQL* <br> &emsp; 🛠️ *Standard MVC Architecture (prioritizing rapid project development)*
+### Limitations:
 
-* Self-assessment: Haven't yet learned AWS CLI and Lambda, so the project's core architecture is tightly fixed to EC2 -> will face difficulties with scalability
+* Haven't yet learned AWS CLI and Lambda, so the project's core architecture is tightly fixed to EC2 -> will face difficulties with scalability if traffic spikes suddenly (analyzed further in the final self-evaluation, Week 8).

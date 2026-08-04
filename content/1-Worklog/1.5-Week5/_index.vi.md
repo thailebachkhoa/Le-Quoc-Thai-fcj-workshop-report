@@ -6,49 +6,28 @@ chapter: false
 pre: " <b> 1.5. </b> "
 ---
 
-
-
 ### Mục tiêu tuần 5:
 
-* 
+* Khởi tạo hạ tầng AWS thật (EC2, RDS) thay cho localhost
+* Đưa được bản deploy đầu tiên của website lên internet, có domain và HTTPS
+* Thiết lập quy trình deploy code từ GitHub lên EC2
 
 ### Các công việc cần triển khai trong tuần này:
 
-| Thứ tự | Nhiệm vụ | Thời gian ước tính |
-| --- | --- | --- |
-| 1 | - Read and update on internal rules and regulations at the host unit <br> - Research documentation on Cloud Computing (AWS) | Daily |
-| 2 | - Proactively consult senior students/social media to build an AWS learning roadmap | 1 day |
-| 3 | - Create an AWS account and claim the $200 free credit <br> - Choose a topic and reference similar projects | 1 day |
-| 4 | - Learn EC2 basics: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Methods for remote SSH into EC2 <br> - Learn about Elastic IP | 1 week |
-| 5 | - Develop ideas for the interface <br> - Review the Ubuntu CLI environment (the OS to be chosen on EC2) <br> - Demo a static website using Elastic IP | 1 week |
+| Thứ tự | Công việc | Ngày bắt đầu | Thời gian dự kiến |
+| :-: | :--- | :-: | :-: |
+| **1** | - Khởi tạo EC2 instance (Ubuntu, t4g.micro), cấu hình Security Group (mở port 80/443/22) <br> - Cài đặt Apache + PHP 8 trên EC2 | `06/07/2026` | 2 ngày |
+| **2** | - Khởi tạo Amazon RDS (MySQL 8.4, t4g.micro), cấu hình Security Group cho phép EC2 kết nối tới RDS <br> - Import schema.sql lên RDS | `08/07/2026` | 1 ngày |
+| **3** | - Đăng ký domain miễn phí qua DuckDNS, trỏ về Elastic IP của EC2 <br> - Cấu hình HTTPS (Let's Encrypt/certbot) | `09/07/2026` | 1 ngày |
+| **4** | - Đưa code từ GitHub lên EC2 (git clone/git pull), cấu hình `.env`, kiểm thử toàn bộ luồng đã chạy được trên localhost | `10/07/2026` | 2 ngày |
 
-* Hiểu AWS là gì và nắm được các nhóm dịch vụ cơ bản: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
+### Kết quả đạt được tuần 5:
 
-* Đã tạo và cấu hình AWS Free Tier account thành công.
+* Website chạy được trên internet thật, tại domain `i-love-fcaj.duckdns.org`, có HTTPS hợp lệ.
+* Tách riêng compute (EC2) và database (RDS) thay vì gộp chung 1 máy — dễ backup, dễ scale riêng từng phần sau này.
+* Xác lập được quy trình deploy thủ công: sửa code -> push GitHub -> SSH vào EC2 -> `git pull` -> restart Apache.
 
-* Làm quen với AWS Management Console và biết cách tìm, truy cập, sử dụng dịch vụ từ giao diện web.
+### Hạn chế:
 
-* Cài đặt và cấu hình AWS CLI trên máy tính bao gồm:
-  * Access Key
-  * Secret Key
-  * Region mặc định
-  * ...
-
-* Sử dụng AWS CLI để thực hiện các thao tác cơ bản như:
-
-  * Kiểm tra thông tin tài khoản & cấu hình
-  * Lấy danh sách region
-  * Xem dịch vụ EC2
-  * Tạo và quản lý key pair
-  * Kiểm tra thông tin dịch vụ đang chạy
-  * ...
-
-* Có khả năng kết nối giữa giao diện web và CLI để quản lý tài nguyên AWS song song.
-* ...
-
-
+* Deploy hoàn toàn thủ công, chưa có CI/CD — mỗi lần cập nhật code phải tự tay lặp lại đủ các bước, dễ quên bước (ví dụ quên đổi quyền sở hữu file `www-data` sau khi pull), dẫn đến một số lỗi vặt phải xử lý ở Tuần 7.
+* RDS đang cấu hình Single-AZ, backup retention chỉ 1 ngày — đủ cho giai đoạn demo nhưng chưa đạt chuẩn production thật.

@@ -6,25 +6,26 @@ chapter: false
 pre: " <b> 1. </b> "
 ---
 
-Below is the worklog summary for the 6-week internship (From the start date: June 15th to the workshop submission deadline: August 2nd). Each week includes: objectives, expected plan, and results.
+Below is the worklog summary for the 8-week internship (from the project start date, June 8th, to the workshop submission deadline, August 2nd). Each week includes: objectives, expected plan, results achieved, and limitations (if any).
 
-## Overview
-Due to the actual internship duration being limited to 6 weeks compared to the standard 8 weeks required by Bach Khoa University, the project scope has been scaled down to align with the schedule.
+### Overview
 
-Advanced tasks such as code refactoring, standardizing the CI/CD pipeline, and advanced testing and security have therefore been reduced.
-
-This project will progress from a fully functional localhost environment before deploying on AWS. The primary focus is on the stable operation of the AWS infrastructure and the completion of basic feature workflows.
+The project follows a clear progression: complete the core functionality on localhost first, then deploy to AWS, and finally add advanced authentication services before finishing the documentation. The focus throughout is on running a stable AWS infrastructure and completing the core workflows of a basic e-commerce website.
 
 * Abbreviations: FE = Frontend, BE = Backend, DB = Database
 
-**Week 1**: Define project requirements, sketch UI/UX, and familiarize with AWS
+**Week 1:** [Define project requirements, sketch UI/UX, and get familiar with AWS](1.1-week1/)
 
-**Week 2:** Design DB and develop FE
+**Week 2:** [Design the architecture & database, start FE development](1.2-week2/)
 
-**Week 3:** Complete FE, start BE development, and practice basic AWS labs
+**Week 3:** [Complete FE, start BE development, and practice basic AWS labs](1.3-week3/)
 
-**Week 4:** Finalize BE - Test the project running on localhost using XAMPP
+**Week 4:** [Finalize BE — get everything running stably on localhost via XAMPP](1.4-week4/)
 
-**Week 5:** Provision AWS infrastructure and deploy the project
+**Week 5:** [Provision AWS infrastructure (EC2, RDS) and ship the first live deployment](1.5-week5/)
 
-**Week 6:** Integrate auxiliary services and finalize the summary report
+**Week 6:** [Integrate Google sign-in via Amazon Cognito and 2-factor authentication (TOTP) for Admin](1.6-week6/)
+
+**Week 7:** [Testing, troubleshooting, and stabilizing the system in production](1.7-week7/)
+
+**Week 8:** [Finalize the architecture documentation and the internship summary report](1.8-week8/)
