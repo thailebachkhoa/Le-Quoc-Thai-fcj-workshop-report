@@ -44,3 +44,5 @@ pre: " <b> 4.1. </b> "
 
 
 ### Some photos from the event
+
+![Approve images](1.jpg "Approve images")
