@@ -13,7 +13,7 @@ pre: " <b> 1.1. </b> "
 * Tìm kiếm tài liệu cloud computing liên quan chương trình
 * Có bản vẽ phác thảo đầu về UI
 * Lựa chọn công nghệ, kiến trúc cho dự án
-* Xây dựng kế hoạch học tập - di chuyển suốt 6-8 tuần thực tập
+* Xây dựng kế hoạch học tập - di chuyển suốt 9 tuần thực tập
 
 ### Các công việc cần triển khai trong tuần này:
 | Thứ tự | Công việc | Thời gian dự kiến |
@@ -39,7 +39,5 @@ pre: " <b> 1.1. </b> "
 ** https://caycanhdian.com/
 ** https://rlc.vn/
 ** https://www.cayxanhdep.vn/
-* **Lựa chọn công nghệ**: thuần PHP (không framework), Mysql và Kiến trúc MVC phổ thông ( ưu tiên theo tốc độ phát triển dự án )
-
-* Đánh giá cá nhân: Chưa học được AWS Cli và Lambda nên kiến trúc lõi dự án bị cố định chặt vào ec2 -> sẽ gặp khó trong vấn đề mở rộng
+* **Lựa chọn công nghệ**: PHP,  Mysql và Kiến trúc MVC phổ thông 
 
