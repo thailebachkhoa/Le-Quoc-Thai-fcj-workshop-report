@@ -1,22 +1,18 @@
 ---
-title: "Blogs Posted"
+title: "Published Blog Posts"
 date: 2024-01-01
 weight: 3
 chapter: false
 pre: " <b> 3. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
+This section lists and introduces the blog posts published on the [AWS Study Group](https://www.facebook.com/groups/awsstudygroupfcj).
 
-This section will list and introduce the blogs you have posted to [AWS Study Group](https://www.facebook.com/groups/awsstudygroupfcj). For example:
+###  [Blog 1 - Backup database to S3 without hardcoding Access Keys — using IAM Roles](3.1-Blog1/)
+This blog demonstrates how to attach an IAM Role directly to an EC2 instance to automatically backup MySQL to S3 without storing Access Keys or Secret Keys anywhere in the code. This solution effectively enforces the Principle of Least Privilege and completely eliminates the risk of security credential leaks.
 
-###  [Blog 1 - SESSION POLICIES IN AMAZON EKS POD IDENTITY](3.1-Blog1/)
-This blog introduces the newly added session policies feature in Amazon EKS Pod Identity, which allows you to narrow IAM permissions flexibly and precisely for each pod without needing to create multiple separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+###  [Blog 2 - 3 AWS Cost Traps Beginners Easily Fall Into (And How to Avoid Them with Free Tier + Automation)](3.2-Blog2/)
+This blog shares 3 real-world scenarios that can easily lead to unexpected costs when deploying personal projects on AWS: public IPv4/Elastic IP policy changes, creating S3 buckets in the wrong Region, and leaving EC2/RDS running 24/7. It also guides you on how to avoid these issues using the Free Tier, automating start/stop schedules with Lambda + EventBridge Scheduler, and setting up safety nets with AWS Budgets.
 
-###  [Blog 2 - ...](3.2-Blog2/)
-This blog introduces the newly added session policies feature in Amazon EKS Pod Identity, which allows you to narrow IAM permissions flexibly and precisely for each pod without needing to create multiple separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
-
-###  [Blog 3 - ...](3.3-Blog3/)
-This blog introduces the newly added session policies feature in Amazon EKS Pod Identity, which allows you to narrow IAM permissions flexibly and precisely for each pod without needing to create multiple separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+###  [Blog 3 - CloudWatch Alarms Aren't as Easy as They Seem: The Story of Setting the Greater/Lower Than Condition Backward](3.3-Blog3/)
+This blog analyzes a small but common configuration mistake when creating a CloudWatch Alarm to monitor RDS storage (`FreeStorageSpace`) by mistakenly selecting the "Greater Than" condition instead of "Lower Than". It shares key insights on reading alert logs from email, how to fix the issue, and lessons learned on testing Alarms bidirectionally before going into production.

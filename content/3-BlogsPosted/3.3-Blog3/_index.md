@@ -1,31 +1,46 @@
 ---
-title: "Blog 3"
-date: 2024-01-01
-weight: 1
-chapter: false
-pre: " <b> 3.3. </b> "
+title: "CloudWatch Alarms Aren't as Easy as They Seem: The Story of Setting the Greater/Lower Than Condition Backward"
+date: 2026-08-04
+draft: false
+tags: ["aws", "cloudwatch", "monitoring"]
+description: "A small but easy-to-make configuration error when creating a CloudWatch Alarm to monitor RDS storage, and how to spot and fix it promptly."
 ---
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
 
-# SESSION POLICIES IN AMAZON EKS POD IDENTITY
+## Background
 
-Amazon EKS Pod Identity has recently added the session policies feature, allowing you to narrow IAM permissions flexibly and precisely for each pod without needing to create many separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+After deploying RDS for the Plantify Co project, I wanted an automated alarm when database disk storage runs low — avoiding situations where the database stops writing data without anyone knowing beforehand. CloudWatch Alarm + SNS (email notifications) was the ideal setup for this.
 
-Key points to know:
+## Initial Setup — and the First Shock
 
-* A session policy is an inline IAM policy specified when creating or updating a Pod Identity association.
-* Effective permissions = intersection between the IAM role permissions and the session policy → the session policy can only narrow permissions, not expand them.
-* Helps avoid over-permissioning when reusing a single IAM role for multiple workloads with different needs.
-* Supports both same-account and cross-account (via IAM role chaining).
-* Significantly reduces the number of IAM roles that need to be managed, helping avoid hitting IAM quota limits in large clusters.
-* Easily configured through the AWS Management Console, AWS CLI, or AWS SDK when creating an association between a Kubernetes ServiceAccount and an IAM role.
+I created an Alarm to monitor the RDS `FreeStorageSpace` metric, setting the threshold to trigger when free storage dropped below 2GB. A few minutes after enabling it, an email landed in my inbox:
 
-This feature is especially useful when you have many applications running on the same IAM role but need different permission restrictions (for example: one pod only reads a specific S3 bucket, another pod only calls certain APIs).
+```
+ALARM: "Plantify-RDS-LowStorage" in Asia Pacific (Singapore)
+Reason: Threshold Crossed: 1.95011616768E10 was greater than the threshold (2.0E9)
+```
 
-...Image...
+Translated into plain English: current free storage (~19.5GB) was **greater than** the 2GB threshold — and the Alarm triggered because the condition was set to... **"Greater than"** instead of **"Lower than"**. In other words, I accidentally configured it as: "alert when free space EXCEEDS 2GB" — and since the database almost always has more than 2GB free, the Alarm fired immediately even though nothing was wrong.
 
-...Link...
+## Why This Mistake Is Easy to Make
 
-...Guide...
+When creating an Alarm in the CloudWatch Console, the "Conditions" section lets you choose between operators: Greater than, Greater than or equal, Lower than, Lower than or equal. For certain metrics (like high CPU usage being bad → Greater Than is intuitive), but for other metrics (like low free storage being bad → you must use Lower Than), picking the wrong operator is easy to do if you don't pause to think carefully about what the metric actually measures before selecting a condition.
+
+## How to Spot and Fix It
+
+Read the alert email carefully — CloudWatch always clearly details the actual value, threshold set, and operator used in the "Reason for State Change" section. This was where the root cause stood out: the actual value and threshold weren't bad in a real-world sense; the comparison operator was just pointing in the wrong direction.
+
+Back in the Alarm settings, update:
+```
+Before: Whenever FreeStorageSpace is Greater than 2000000000
+After:  Whenever FreeStorageSpace is Lower than 2000000000
+```
+
+After saving the fix, the Alarm automatically returned to the **OK** state within a few minutes — confirming that the Alarm functions properly in both directions: triggering when there's an issue and recovering automatically when the issue resolves.
+
+## Key Takeaways
+
+- **Always carefully read the alert email/log content** instead of panicking at the red "ALARM" label — the "Reason for State Change" section always explains precisely what happened.
+- **Test both ways before trusting in production**: Don't just verify that the Alarm triggers; make sure it turns off (returns to OK) when the condition resolves.
+- For every metric, pause for 5 seconds to ask yourself: "Is a high value good or bad?" before picking Greater/Lower Than — for `FreeStorageSpace`, high is good (plenty of free space) so you alert when **low**; for `CPUUtilization`, high is bad (overloaded) so you alert when **high**. Simple as it sounds, it's remarkably easy to mix up when rushing through the Console.
+
+A small error, easy to fix, but if you don't read the logs closely, it can confuse beginners or — worse — lead them to mute Alarms thinking they're "false alarms," when it was just configured in the wrong direction.
