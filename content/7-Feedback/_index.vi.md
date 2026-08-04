@@ -5,40 +5,33 @@ weight: 7
 chapter: false
 pre: " <b> 7. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
 
->Tại đây bạn có thể tự do đóng góp ý kiến cá nhân về những trải nghiệm khi tham gia chương trình First Cloud AI Journey, giúp team FCAJ cải thiện những vấn đề còn thiếu sót dựa trên các hạng mục sau:
+>Những dòng đầu tiên này xin được dành tặng cho anh Hưng -- Head Solution và đội ngũ AWS VietNam đã tổ chức chương trình thực tập này.
+
+>Cám ơn team vì đã cho em một cộng đồng, một mái nhà để học tập -- giao lưu -- chia sẻ. Tuy thời gian bên nhau ngắn ngủi chưa đến 100 ngày nhưng những kỉ niệm -- bài học -- kho thư viện em đã may mắn tiếp cận và có được sẽ không bao giờ thiếu trên hành trình sự nghiệp của mình.
+
+>Sau cùng, cám ơn vì tất cả -- nếu phải liệt kê thì có lẽ vượt cả nội dung chính. Hi vọng cộng đồng mình sẽ còn tiếp tục và phát huy hơn nữa trong tương lai.
 
 ### Đánh giá chung
 
 **1. Môi trường làm việc**  
-Môi trường làm việc rất thân thiện và cởi mở. Các thành viên trong FCAJ luôn sẵn sàng hỗ trợ khi mình gặp khó khăn, kể cả ngoài giờ làm việc. Không gian làm việc gọn gàng, thoải mái, giúp mình tập trung tốt hơn. Tuy nhiên, mình nghĩ có thể bổ sung thêm một số buổi giao lưu hoặc team bonding để mọi người hiểu nhau hơn.
-
-**2. Sự hỗ trợ của mentor / team admin**  
-Mentor hướng dẫn rất chi tiết, giải thích rõ ràng khi mình chưa hiểu và luôn khuyến khích mình đặt câu hỏi. Team admin hỗ trợ các thủ tục, tài liệu và tạo điều kiện để mình làm việc thuận lợi. Mình đánh giá cao việc mentor cho phép mình thử và tự xử lý vấn đề thay vì chỉ đưa đáp án.
-
-**3. Sự phù hợp giữa công việc và chuyên ngành học**  
-Công việc mình được giao phù hợp với kiến thức mình đã học ở trường, đồng thời mở rộng thêm những mảng mới mà mình chưa từng được tiếp cận. Nhờ vậy, mình vừa củng cố kiến thức nền tảng, vừa học thêm kỹ năng thực tế.
-
-**4. Cơ hội học hỏi & phát triển kỹ năng**  
-Trong quá trình thực tập, mình học được nhiều kỹ năng mới như sử dụng công cụ quản lý dự án, kỹ năng làm việc nhóm, và cả cách giao tiếp chuyên nghiệp trong môi trường công ty. Mentor cũng chia sẻ nhiều kinh nghiệm thực tế giúp mình định hướng tốt hơn cho sự nghiệp.
-
-**5. Văn hóa & tinh thần đồng đội**  
-Văn hóa công ty rất tích cực: mọi người tôn trọng lẫn nhau, làm việc nghiêm túc nhưng vẫn vui vẻ. Khi có dự án gấp, mọi người cùng nhau cố gắng, hỗ trợ không phân biệt vị trí. Điều này giúp mình cảm thấy mình là một phần của tập thể, dù chỉ là thực tập sinh.
-
-**6. Chính sách / phúc lợi cho thực tập sinh**  
-Công ty có hỗ trợ phụ cấp thực tập và tạo điều kiện về thời gian linh hoạt khi cần thiết. Ngoài ra, việc được tham gia các buổi đào tạo nội bộ là một điểm cộng lớn.
+- Không khí làm việc chuyên nghiệp rất tốt tại nên tinh thần làm việc "hết mình"
 
 
-### Một số câu hỏi khác
+**2. Cơ hội học hỏi & phát triển kỹ năng**  
+- Qua chương trình, mình rèn luyện được tư duy cloud - computing. Code không chỉ chạy trên localhost nữa
+
+**3. Văn hóa & tinh thần đồng đội**
+-  Kết thúc chương trình, mình cô đọng và ấn tượng nhất câu nói: "Mình còn trẻ mà, hãy thử và chơi làm việc hết mình "  
+
+
+### Trả lời một số câu hỏi phổ biến: 
 - Điều bạn **hài lòng nhất** trong thời gian thực tập?  
-- Điều bạn nghĩ công ty **cần cải thiện** cho các thực tập sinh sau?  
+-> Trả lời: Có được cộng đồng mạnh và nhiệt tình
+- Điều bạn nghĩ công ty **cần cải thiện** cho các thực tập sinh sau?
+-> Trả lời: công ty nên khiến các bạn chủ động trong group hơn, nhóm BKU "hơi trầm"  
 - Nếu giới thiệu cho bạn bè, bạn có **khuyên họ thực tập ở đây không**? Vì sao?  
+-> Trả lời: Có, nhưng phải với bạn bè "nhiệt tình". Đây là môi trường rất mở, nơi thậm chí sếp cấp cao như anh hùng bạn cũng có thể tiếp cận.
 
 
-### Đề xuất & mong muốn
-- Bạn có đề xuất gì để cải thiện trải nghiệm trong kỳ thực tập?  
-- Bạn có muốn tiếp tục chương trình này trong tương lai?
-- Góp ý khác (tự do chia sẻ):
+
