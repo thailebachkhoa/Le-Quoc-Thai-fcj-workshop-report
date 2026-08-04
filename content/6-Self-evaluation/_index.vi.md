@@ -6,31 +6,25 @@ chapter: false
 pre: " <b> 6. </b> "
 ---
 
-Trong suốt thời gian thực tập tại **[Tên công ty/tổ chức]** từ **[ngày bắt đầu]** đến **[ngày kết thúc]**, tôi đã có cơ hội học hỏi, rèn luyện và áp dụng kiến thức đã được trang bị tại trường vào môi trường làm việc thực tế.  
-Tôi đã tham gia **[mô tả ngắn gọn dự án hoặc công việc chính]**, qua đó cải thiện kỹ năng **[liệt kê kỹ năng: lập trình, phân tích, viết báo cáo, giao tiếp…]**.  
+Trong suốt thời gian thực tập tại FCAJ AI Journey Cloud suốt 8 tuần thực tập, tôi đã có cơ hội học hỏi, rèn luyện và áp dụng kiến thức đã được trang bị tại trường vào môi trường làm việc thực tế.  
 
-Về tác phong, tôi luôn cố gắng hoàn thành tốt nhiệm vụ, tuân thủ nội quy, và tích cực trao đổi với đồng nghiệp để nâng cao hiệu quả công việc.
+Lần đầu, em đã tiếp xúc với cloud-computing, từ đó đập bỏ hoàn toàn tư duy chạy localhost cũ chỉ phục vụ dự án học tập mà chuyển sang tư duy mới hơn: chạy sản phẩm trên trung tâm tính toán cho nhiều người dùng, xây dựng chắc hơn tư duy sản phẩm thực tế qua từng bài events
 
-Để phản ánh một cách khách quan quá trình thực tập, tôi xin tự đánh giá bản thân dựa trên các tiêu chí dưới đây:
+Về tác phong, em đã có 2 phần vi phạm việc riêng vì sử dụng và lướt web trong cuối giờ làm việc. Qua đó, hiểu rằng: trong công việc, đúng cả ngày không bằng lơ là 1 lúc, sự tập trung cần duy trì cao độ nhằm đảm bảo môi trường làm việc chuyên nghiệp.
 
+Dựa trên tiêu chí đánh giá cuối kì, cá nhân em tự đánh giá tổng điểm:
 
-| STT | Tiêu chí                            | Mô tả                                                                                            | Tốt | Khá | Trung bình |
-| --- | ----------------------------------- | ------------------------------------------------------------------------------------------------ | --- | --- | ---------- |
-| 1   | **Kiến thức và kỹ năng chuyên môn** | Hiểu biết về ngành, áp dụng kiến thức vào thực tế, kỹ năng sử dụng công cụ, chất lượng công việc | ✅   | ☐   | ☐          |
-| 2   | **Khả năng học hỏi**                | Tiếp thu kiến thức mới, học hỏi nhanh                                                            | ☐   | ✅   | ☐          |
-| 3   | **Chủ động**                        | Tự tìm hiểu, nhận nhiệm vụ mà không chờ chỉ dẫn                                                  | ✅   | ☐   | ☐          |
-| 4   | **Tinh thần trách nhiệm**           | Hoàn thành công việc đúng hạn, đảm bảo chất lượng                                                | ✅   | ☐   | ☐          |
-| 5   | **Kỷ luật**                         | Tuân thủ giờ giấc, nội quy, quy trình làm việc                                                   | ☐   | ☐   | ✅          |
-| 6   | **Tính cầu tiến**                   | Sẵn sàng nhận feedback và cải thiện bản thân                                                     | ☐   | ✅   | ☐          |
-| 7   | **Giao tiếp**                       | Trình bày ý tưởng, báo cáo công việc rõ ràng                                                     | ☐   | ✅   | ☐          |
-| 8   | **Hợp tác nhóm**                    | Làm việc hiệu quả với đồng nghiệp, tham gia nhóm                                                 | ✅   | ☐   | ☐          |
-| 9   | **Ứng xử chuyên nghiệp**            | Tôn trọng đồng nghiệp, đối tác, môi trường làm việc                                              | ✅   | ☐   | ☐          |
-| 10  | **Tư duy giải quyết vấn đề**        | Nhận diện vấn đề, đề xuất giải pháp, sáng tạo                                                    | ☐   | ✅   | ☐          |
-| 11  | **Đóng góp vào dự án/tổ chức**      | Hiệu quả công việc, sáng kiến cải tiến, ghi nhận từ team                                         | ✅   | ☐   | ☐          |
-| 12  | **Tổng thể**                        | Đánh giá chung về toàn bộ quá trình thực tập                                                     | ✅   | ☐   | ☐          |
+1. Điểm chuyên cần: 0.9 điểm ( do 1 lần không checkin buổi đầu )
+2. Điểm thái độ: 1 điểm ( em đảm bảo không lần nào gây tiếng ồn khó chịu xung quanh, không trốn về sớm hay không dùng kính ngữ khi giao tiếp với mọi người )
+3. Điểm tác phong: 1 điểm ( quần áo luôn đảo bảo ngăn nắp, luôn đi sớm trước 8h45 )
+4. Điểm event: 0.75 ( do bản thân chưa chủ động đặt câu hỏi với speaker tuy nhiên qua mục event ở trên, em đảm bảo mình có về tự nghiên cứu và tổng hợp ở nhà )
+5. Điểm dự án ( vì lí do khách quan và hạn chế năng lực, phần này em xin phép không tự đánh giá )
+
+Ngoài ra, một vài điểm trừ tự đánh giá cũng đã đề cập ở phần worklog
+
 
 ### Cần cải thiện
 
-* Nâng cao tính kỹ luật, chấp hành nghiêm chỉnh nội quy của công ty hoặc bất kỳ trong một tổ chức nào
-* Cải thiện trong cách tư duy giải quyết vấn đề
-* Học cách giao tiếp tốt hơn trong giao tiếp hằng ngày và trong công việc, xử lý tình huống
+- Cập nhập tin tức thường xuyên ( bản thân gặp vài trường hợp vì không xem lại và không kĩ nên luôn trễ tiến độ với phần còn lại )
+- Nên chủ động trao đổi với speaker hơn nữa
+- Nên chủ động vận động sau khi ngồi quá lâu ( bản thân sau kì thực tập đã gặp một số vấn đề về mắt, đây là bài học quý giá không thua bất cứ cuốn sách nào )
