@@ -1,20 +1,34 @@
 ---
-title : "Truy cập S3 từ môi trường truyền thống"
-date : 2024-01-01 
-weight : 4 
-chapter : false
-pre : " <b> 5.4. </b> "
+title: "4. Domain, HTTPS, Elastic IP"
+weight: 4
+date: 2026-08-05
+draft: false
 ---
 
-#### Tổng quan
+## 4.1. Gắn Elastic IP
 
-+ Trong phần này, bạn sẽ tạo một Interface Endpoint để truy cập Amazon S3 từ môi trường truyền thống mô phỏng. Interface Endpoint sẽ cho phép bạn định tuyến đến Amazon S3 qua kết nối VPN từ môi trường truyền thống mô phỏng của bạn.
+Public IP mặc định của EC2 đổi mỗi lần Stop/Start — gây phiền vì phải sửa lại SSH/domain liên tục. Gắn địa chỉ cố định:
 
-+ Tại sao nên sử dụng **Interface Endpoint**:
-    + Các Gateway endpoints chỉ hoạt động với các tài nguyên đang chạy trong VPC nơi chúng được tạo. Interface Endpoint  hoạt động với tài nguyên chạy trong VPC và cả tài nguyên chạy trong môi trường truyền thống. Khả năng kết nối từ môi trường truyền thống của bạn với aws cloud có thể được cung cấp bởi AWS Site-to-Site VPN hoặc AWS Direct Connect.
-    + Interface Endpoint cho phép bạn kết nối với các dịch vụ do AWS PrivateLink cung cấp. Các dịch vụ này bao gồm một số dịch vụ AWS, dịch vụ do các đối tác và khách hàng AWS lưu trữ trong VPC của riêng họ (gọi tắt là Dịch vụ PrivateLink endpoints) và các dịch vụ Đối tác AWS Marketplace. Đối với workshop này, chúng ta sẽ tập trung vào việc kết nối với Amazon S3.
-    
-![Interface endpoint architecture](/images/5-Workshop/5.4-S3-onprem/diagram3.png)
+**EC2 → Network & Security → Elastic IPs → Allocate Elastic IP address** → **Actions → Associate Elastic IP address** → chọn đúng instance.
 
+> Lưu ý về chi phí: từ 1/2/2024, AWS tính phí mọi địa chỉ IPv4 công khai (~$0.005/giờ), kể cả khi đang gắn với instance đang chạy. Free Tier EC2 bao gồm 750 giờ IPv4/tháng trong 12 tháng đầu — đủ miễn phí nếu chỉ dùng đúng 1 địa chỉ.
 
+## 4.2. Domain miễn phí qua DuckDNS
 
+Đăng ký tại [duckdns.org](https://www.duckdns.org), trỏ subdomain về Elastic IP vừa tạo. Cập nhật lại `ServerName` trong Apache Virtual Host cho khớp domain mới.
+
+## 4.3. HTTPS qua Let's Encrypt
+
+```bash
+sudo apt install -y certbot python3-certbot-apache
+sudo certbot --apache -d <subdomain>.duckdns.org
+```
+
+Chọn tùy chọn **redirect toàn bộ HTTP sang HTTPS** khi Certbot hỏi. Chứng chỉ tự động gia hạn, không cần thao tác thêm.
+
+## Lỗi thường gặp
+
+| Lỗi | Nguyên nhân | Cách sửa |
+|---|---|---|
+| Sau khi Stop/Start, không SSH vào được bằng IP cũ | Chưa gắn Elastic IP, Public IP đã đổi | Kiểm tra lại Public IP mới trên EC2 Console, hoặc gắn Elastic IP để tránh lặp lại |
+| Certbot báo lỗi không cấp được chứng chỉ | Domain chưa thực sự trỏ đúng IP, hoặc cổng 80 chưa mở trong Security Group | Kiểm tra `ping <domain>` trả về đúng IP, xác nhận Security Group cho phép HTTP/HTTPS |

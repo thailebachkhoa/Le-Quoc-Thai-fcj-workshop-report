@@ -17,7 +17,7 @@ pre: " <b> 1.1. </b> "
 | No. | Task | Estimated Time |
 | --- | --- | --- |
 | 1 | - Read and update on internal rules and regulations at the host unit <br> - Research documentation on Cloud Computing (AWS) | Daily |
-| 2 | - Proactively consult senior students/social media to build an AWS learning roadmap | 1 day |
+| 2 | - Proactively consult senior students/social media to build an AWS learning roadmap | 7 day |
 | 3 | - Create an AWS account and claim the $200 free credit <br> - Choose a topic and reference similar projects | 1 day |
 | 4 | - Learn EC2 basics: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Methods for remote SSH into EC2 <br> - Learn about Elastic IP | 1 week |
 | 5 | - Develop ideas for the interface <br> - Review the Ubuntu CLI environment (the OS to be chosen on EC2) <br> - Demo a static website using Elastic IP | 1 week |

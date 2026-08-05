@@ -1,19 +1,77 @@
 ---
-title : "Giới thiệu"
-date : 2024-01-01 
-weight : 1
-chapter : false
-pre : " <b> 5.1. </b> "
+title: "1. Rà soát và vá bảo mật code"
+weight: 1
+date: 2026-08-05
+draft: false
 ---
 
-#### Giới thiệu về VPC Endpoint
+Trước khi đưa bất kỳ ứng dụng nào lên môi trường công khai, cần rà soát lại các lỗ hổng bảo mật cơ bản. Đây là bước làm trước tiên, trước cả khi đụng tới AWS Console.
 
-+ Điểm cuối VPC (endpoint) là thiết bị ảo. Chúng là các thành phần VPC có thể mở rộng theo chiều ngang, dự phòng và có tính sẵn sàng cao. Chúng cho phép giao tiếp giữa tài nguyên điện toán của bạn và dịch vụ AWS mà không gây ra rủi ro về tính sẵn sàng.
-+ Tài nguyên điện toán đang chạy trong VPC có thể truy cập Amazon S3 bằng cách sử dụng điểm cuối Gateway. Interface Endpoint  PrivateLink có thể được sử dụng bởi tài nguyên chạy trong VPC hoặc tại TTDL.
+## 1.1. Thêm CSRF protection toàn diện
 
-#### Tổng quan về workshop
-Trong workshop này, bạn sẽ sử dụng hai VPC.
-+ **"VPC Cloud"** dành cho các tài nguyên cloud như Gateway endpoint và EC2 instance để kiểm tra.
-+ **"VPC On-Prem"** mô phỏng môi trường truyền thống như nhà máy hoặc trung tâm dữ liệu của công ty. Một EC2 Instance chạy phần mềm StrongSwan VPN đã được triển khai trong "VPC On-prem" và được cấu hình tự động để thiết lập đường hầm VPN Site-to-Site với AWS Transit Gateway. VPN này mô phỏng kết nối từ một vị trí tại TTDL (on-prem) với AWS cloud. Để giảm thiểu chi phí, chỉ một phiên bản VPN được cung cấp để hỗ trợ workshop này. Khi lập kế hoạch kết nối VPN cho production workloads của bạn, AWS khuyên bạn nên sử dụng nhiều thiết bị VPN để có tính sẵn sàng cao.
+Ứng dụng ban đầu không có cơ chế chống CSRF (Cross-Site Request Forgery) ở bất kỳ action ghi/xóa dữ liệu nào — cho phép kẻ tấn công dựng 1 trang giả, khi nạn nhân (đang đăng nhập) mở trang đó, request bị gửi thay mặt nạn nhân mà họ không biết.
 
-![overview](/images/5-Workshop/5.1-Workshop-overview/diagram1.png)
+Xây dựng class dùng chung:
+
+```php
+class Csrf
+{
+    public static function token()
+    {
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['csrf_token'];
+    }
+
+    public static function field()
+    {
+        return '<input type="hidden" name="csrf_token" value="' . self::token() . '">';
+    }
+
+    public static function verify()
+    {
+        $sent = $_POST['csrf_token'] ?? '';
+        $real = $_SESSION['csrf_token'] ?? '';
+        if ($real === '' || !hash_equals($real, $sent)) {
+            http_response_code(403);
+            die('Yêu cầu không hợp lệ.');
+        }
+    }
+}
+```
+
+Áp dụng `Csrf::verify()` trong constructor của **7 khu vực**: `AdminController`, `AuthController`, `CartController`, `ShopController`, `NewsController`, `DashboardController`, và endpoint độc lập `upload-video.php`. Mọi action ghi/xóa dữ liệu đổi từ GET (`<a href>`) sang POST (`<form>`).
+
+## 1.2. Ẩn thông tin lỗi hệ thống
+
+Trước:
+```php
+} catch (PDOException $e) {
+    die("Database Connection Error: " . $e->getMessage());
+}
+```
+
+Sau:
+```php
+} catch (PDOException $e) {
+    error_log('DB Connection Error: ' . $e->getMessage());
+    die('Hệ thống đang bảo trì, vui lòng quay lại sau.');
+}
+```
+
+Tắt `display_errors` trong `php.ini` ở môi trường production.
+
+## 1.3. Các bug nhỏ khác đã sửa
+
+- `?>?>` lặp đôi trong `header.php`/`dashboard/index.php` — in ký tự thừa ở đầu mọi trang.
+- `composer.json` sai case (`bootstrap.php` → `Bootstrap.php`) — không lỗi trên Windows nhưng lỗi trên Linux (case-sensitive filesystem).
+- `schema.sql` dư dấu phẩy trước `ON DUPLICATE KEY UPDATE` — lỗi cú pháp khi import MySQL thật.
+- `FileController::render()` dùng `strpos()` thay vì `realpath()` để chặn path traversal — nâng cấp lên `realpath()` cho chắc chắn.
+
+## Lỗi thường gặp
+
+| Lỗi | Nguyên nhân | Cách sửa |
+|---|---|---|
+| CSRF token không gửi lên dù đã thêm `csrf_field()` | Đặt `csrf_field()` sai vị trí — nhét vào giữa các thuộc tính của thẻ `<form ...>` thay vì đặt sau dấu `>` đóng thẻ | `csrf_field()` phải là 1 phần tử con của form, đứng sau dấu `>` |
+| Toàn bộ form POST trong admin bị 403 sau khi thêm `Csrf::verify()` | Quên thêm `<?= csrf_field() ?>` vào 1 vài form cũ chưa cập nhật | Rà soát lại toàn bộ form POST, thêm token vào từng cái |

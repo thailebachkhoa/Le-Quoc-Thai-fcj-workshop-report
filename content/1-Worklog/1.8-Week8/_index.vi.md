@@ -8,7 +8,7 @@ pre: " <b> 1.8. </b> "
 
 ### Mục tiêu tuần 8:
 
-* Hoàn thiện tài liệu thiết kế kiến trúc hệ thống
+* Hoàn thiện tài liệu thiết kế kiến trúc hệ thống AWS
 * Tổng kết lại toàn bộ dịch vụ AWS/bên thứ ba đã sử dụng và bài học rút ra
 * Đóng gói báo cáo workshop cuối kỳ (Hugo site) và publish qua GitHub Pages
 

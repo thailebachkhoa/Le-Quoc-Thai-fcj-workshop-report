@@ -1,33 +1,113 @@
 ---
-title: "Workshop"
-date: 2024-01-01
-weight: 5
-chapter: false
-pre: " <b> 5. </b> "
+title: "Workshop: Xây dựng và triển khai Plantify Co trên AWS"
+weight: 26
+date: 2026-08-05
+draft: false
+description: "Toàn bộ quy trình triển khai một ứng dụng web PHP thực tế lên AWS: EC2, RDS, S3, IAM, CloudWatch, Lambda, EventBridge, Cognito, kèm các lỗi thật đã gặp và cách xử lý."
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+## Overview
+
+Plantify Co là một ứng dụng web bán cây cảnh, viết bằng PHP thuần theo mô hình MVC tự triển khai, dùng MySQL làm cơ sở dữ liệu. Workshop này ghi lại toàn bộ quá trình đưa ứng dụng có sẵn (đang chạy local) lên hạ tầng AWS thật, đúng theo thứ tự đã thực hiện — bao gồm cả những chỗ làm sai, phải quay lại sửa, hoặc đổi hướng giữa chừng.
+
+Mục tiêu của workshop:
+
+- Triển khai một ứng dụng PHP truyền thống lên AWS theo mô hình 2 tầng (EC2 + RDS), không dùng serverless, phù hợp với ứng dụng đã có sẵn codebase.
+- Áp dụng đầy đủ 5+ dịch vụ AWS, mỗi dịch vụ có vai trò rõ ràng, không dùng cho có.
+- Đảm bảo 3 trụ cột: **bảo mật** (least privilege, HTTPS, CSRF), **khả năng giám sát** (CloudWatch, SNS), **tối ưu chi phí** (tự động Start/Stop tài nguyên).
+- Thay thế hệ thống đăng nhập tự viết bằng **Amazon Cognito + Google OAuth**, có 2FA bắt buộc cho Admin.
+
+Toàn bộ mã nguồn: [github.com/thailebachkhoa/FCAJ-Intern-Project](https://github.com/thailebachkhoa/FCAJ-Intern-Project)
+
+Website demo: chạy qua domain DuckDNS, HTTPS bật qua Let's Encrypt.
+https://i-love-fcaj.duckdns.org/faq
+
+Video Demo: https://drive.google.com/drive/folders/1h2YFHT7YLl9_Y-XRBVLqYCZcQ-CJM9o7?usp=drive_link
 
 
-# Đảm bảo truy cập Hybrid an toàn đến S3 bằng cách sử dụng VPC endpoint
+## Prerequisite
 
-#### Tổng quan
+Trước khi bắt đầu, cần chuẩn bị:
 
-**AWS PrivateLink** cung cấp kết nối riêng tư đến các dịch vụ aws từ VPCs hoặc trung tâm dữ liệu (on-premise) mà không làm lộ lưu lượng truy cập ra ngoài public internet.
+| Mục | Ghi chú |
+|---|---|
+| Tài khoản AWS | Còn trong Free Tier (12 tháng đầu) để không phát sinh chi phí ở hầu hết các bước |
+| Region | `ap-southeast-1` (Singapore) — dùng xuyên suốt cho mọi dịch vụ để tránh độ trễ và chi phí truyền dữ liệu xuyên vùng |
+| SSH client | Terminal có sẵn OpenSSH (WSL, Git Bash, PowerShell đều dùng được) |
+| Git | Để clone code và đồng bộ giữa GitHub ↔ EC2 |
+| Tài khoản Google Cloud | Để tạo OAuth Client cho luồng "Đăng nhập bằng Google" qua Cognito |
+| Domain miễn phí | DuckDNS hoặc tương đương, để đủ điều kiện cấp SSL (Let's Encrypt không cấp cho địa chỉ IP thô) |
+| Kiến thức nền | HTML/CSS/PHP cơ bản, khái niệm MVC, khái niệm VPC/Security Group ở mức sơ bộ (workshop sẽ giải thích khi cần) |
 
-Trong bài lab này, chúng ta sẽ học cách tạo, cấu hình, và kiểm tra VPC endpoints để cho phép workload của bạn tiếp cận các dịch vụ AWS mà không cần đi qua Internet công cộng.
+Không cần biết trước: Terraform/CDK (workshop này làm tay qua Console để dễ hiểu từng bước), Docker, Kubernetes.
 
-Chúng ta sẽ tạo hai loại endpoints để truy cập đến Amazon S3: gateway vpc endpoint và interface vpc endpoint. Hai loại vpc endpoints này mang đến nhiều lợi ích tùy thuộc vào việc bạn truy cập đến S3 từ môi trường cloud hay từ trung tâm dữ liệu (on-premise).
-+ **Gateway** - Tạo gateway endpoint để gửi lưu lượng đến Amazon S3 hoặc DynamoDB using private IP addresses. Bạn điều hướng lưu lượng từ VPC của bạn đến gateway endpoint bằng các bảng định tuyến (route tables)
-+ **Interface** - Tạo interface endpoint để gửi lưu lượng đến các dịch vụ điểm cuối (endpoints) sử dụng Network Load Balancer để phân phối lưu lượng. Lưu lượng dành cho dịch vụ điểm cuối được resolved bằng DNS.
+## Mô tả kiến trúc
 
-#### Nội dung
+### Sơ đồ hạ tầng AWS
 
-1. [Tổng quan về workshop](5.1-Workshop-overview/)
-2. [Chuẩn bị](5.2-Prerequiste/)
-3. [Truy cập đến S3 từ VPC](5.3-S3-vpc/)
-4. [Truy cập đến S3 từ TTDL On-premises](5.4-S3-onprem/)
-5. [VPC Endpoint Policies (làm thêm)](5.5-Policy/)
-6. [Dọn dẹp tài nguyên](5.6-Cleanup/)
+```
+Client (HTTPS)
+    │
+    ▼
+Internet Gateway
+    │
+    ▼
+┌─────────────────────── VPC (ap-southeast-1) ───────────────────────┐
+│                                                                      │
+│  ┌── Public Subnet ──┐          ┌── Private Subnet ──┐              │
+│  │   EC2 (t3.micro)   │  SQL     │  RDS (db.t4g.micro) │              │
+│  │   Apache + PHP     │─────────▶│  MySQL, Public: No  │              │
+│  │   + ffmpeg         │          │                     │              │
+│  └─────────┬──────────┘          └──────────┬──────────┘              │
+│            │ IAM Role                        │ Metric                 │
+│            ▼                                 ▼                        │
+│      S3 (backup)                        CloudWatch ──▶ SNS ──▶ Email  │
+│                                                                        │
+└────────────────────────────────────────────────────────────────────┘
+
+Lambda (plantify-scheduler) ◀── EventBridge Scheduler (4 lịch: start/stop)
+
+Cognito User Pool ◀──OAuth──▶ Google Cloud (Identity Provider)
+```
+
+### Bảng dịch vụ và vai trò
+
+| Dịch vụ | Vai trò |
+|---|---|
+| Amazon EC2 | Server chạy Apache + PHP 8.5 + ffmpeg |
+| Amazon RDS (MySQL) | Database, không public |
+| Amazon S3 | Lưu bản sao lưu database |
+| AWS IAM | Role + Policy Least Privilege cho EC2 và Lambda |
+| Amazon CloudWatch | Giám sát CPU (EC2), dung lượng ổ đĩa (RDS) |
+| Amazon SNS | Gửi email cảnh báo |
+| AWS Lambda | Logic Start/Stop tài nguyên tự động |
+| Amazon EventBridge Scheduler | Lên lịch chạy Lambda theo giờ |
+| Amazon Cognito | User Pool, Hosted UI, quản lý Group Admin/Member |
+| Google Cloud OAuth | Identity Provider xác thực tài khoản Google thật |
+
+### Kiến trúc code (MVC)
+
+```
+Trình duyệt → index.php (router) → Controller (Auth + Csrf check)
+                                        │
+                            ┌───────────┴───────────┐
+                            ▼                       ▼
+                        Model (PDO)              View (render HTML)
+                            │                       ▲
+                            ▼                       │
+                        RDS MySQL ──────────────────┘
+```
+
+## Các bước thực hành
+
+Chia thành 7 phần theo đúng trình tự đã thực hiện — mỗi phần là 1 trang riêng, có thể đọc tuần tự hoặc nhảy tới phần cần tham khảo:
+
+1. [Rà soát và vá bảo mật code trước khi lên cloud](01-security-hardening/)
+2. [Dựng hạ tầng cơ bản: EC2 + RDS](02-ec2-rds-setup/)
+3. [Mở rộng dịch vụ: S3, IAM, CloudWatch](03-s3-iam-cloudwatch/)
+4. [Domain, HTTPS, Elastic IP](04-https-elastic-ip/)
+5. [Tự động hoá tiết kiệm chi phí: Lambda + EventBridge](05-lambda-eventbridge/)
+6. [Thay thế Auth bằng Cognito + Google OAuth + TOTP](06-cognito-google-totp/)
+7. [Vá lỗi UI mobile và dọn dẹp code thừa](07-mobile-fix-cleanup/)
+
+Mỗi phần đều có mục **"Lỗi thường gặp"** ghi lại nguyên văn lỗi thật đã xảy ra trong quá trình làm, để người đọc theo sau không mất thời gian mò lại từ đầu.

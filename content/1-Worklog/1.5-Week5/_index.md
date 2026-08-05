@@ -19,13 +19,14 @@ pre: " <b> 1.5. </b> "
 | **1** | - Provision an EC2 instance (Ubuntu, t4g.micro), configure the Security Group (open ports 80/443/22) <br> - Install Apache + PHP 8 on EC2 | `06/07/2026` | 2 days |
 | **2** | - Provision Amazon RDS (MySQL 8.4, t4g.micro), configure the Security Group to allow EC2 to connect to RDS <br> - Import schema.sql into RDS | `08/07/2026` | 1 day |
 | **3** | - Register a free domain via DuckDNS, point it to the EC2 Elastic IP <br> - Configure HTTPS (Let's Encrypt/certbot) | `09/07/2026` | 1 day |
-| **4** | - Deploy the code from GitHub to EC2 (git clone/git pull), configure `.env`, test the full flow that already worked on localhost | `10/07/2026` | 2 days |
+| **4** | - Deploy the code from GitHub to EC2 (git clone/git pull), configure `.env`, test the full flow that already worked on localhost | `10/07/2026` | 2 days <br> - Make EC2 and RDS open-close automatically via Lambda and EventBride |
 
 ### Week 5 Achievements:
 
 * The website is live on the real internet at `i-love-fcaj.duckdns.org`, with valid HTTPS.
 * Compute (EC2) and database (RDS) are separated instead of running on a single machine — easier to back up and scale each part independently later on.
 * Established a manual deployment workflow: edit code -> push to GitHub -> SSH into EC2 -> `git pull` -> restart Apache.
+* The Database and  the server stops daily at 0h00 am and re-open at 7h am 
 
 ### Limitations:
 

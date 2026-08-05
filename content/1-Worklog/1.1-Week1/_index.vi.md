@@ -17,7 +17,7 @@ pre: " <b> 1.1. </b> "
 | Thứ tự | Công việc | Thời gian dự kiến |
 | --- | --- | --- |
 | 1 | - Đọc và cập nhập các nội quy, quy định tại đơn vị thực tập <br> - Tìm kiếm tài liệu Cloud Computing về AWS | Mỗi ngày |
-| 2 | - Chủ động tham khảo bạn bè khóa trước, MXH xây dựng lộ trình học tập AWS | 1 ngày |
+| 2 | - Chủ động tham khảo bạn bè khóa trước, MXH xây dựng lộ trình học tập AWS | 7 ngày |
 | 3 | - Tạo tài khoản AWS và lấy 200$ free <br> - Chọn đề tài và tham khảo dự án tương tự | 1 ngày |
 | 4 | - Tìm hiểu EC2 cơ bản: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Các cách remote SSH vào EC2 <br> - Tìm hiểu Elastic IP | 1 tuần |
 | 5 | - Phát triển ý tưởng cho giao diện <br> - Ôn lại môi trường CLI của Ubuntu (OS sẽ chọn trên EC2) <br> - Demo web tĩnh nhờ Elastic IP | 1 tuần |

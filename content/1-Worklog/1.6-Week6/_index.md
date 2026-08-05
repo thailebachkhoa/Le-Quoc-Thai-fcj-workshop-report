@@ -24,7 +24,7 @@ pre: " <b> 1.6. </b> "
 
 ### Week 6 Achievements:
 
-* Finalized the authentication architecture: both User and Admin sign in through a single "Sign in with Google" button; PHP reads the Cognito Group in the token to distinguish roles; Admin accounts are additionally required to enter a TOTP code before a real session is granted.
+* Add an additional authencation step: both User and Admin sign in through a single "Sign in with Google" button; PHP reads the Cognito Group in the token to distinguish roles; Admin accounts are additionally required to enter a TOTP code before a real session is granted.
 * Kept the legacy username/password login form working in parallel (not removed) for easier rollback, while applying the same mandatory TOTP rule for Admin on both login paths — there is no shortcut that bypasses this protection layer.
 * All related code (Cognito, TOTP, DB migration) is written and ready to be deployed to the real EC2 instance the following week.
 

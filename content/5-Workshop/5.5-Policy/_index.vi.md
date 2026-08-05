@@ -1,95 +1,85 @@
 ---
-title : "VPC Endpoint Policies"
-date : 2024-01-01
-weight : 5
-chapter : false
-pre : " <b> 5.5 </b> "
+title: "5. Tự động hoá tiết kiệm chi phí: Lambda + EventBridge"
+weight: 5
+date: 2026-08-05
+draft: false
 ---
 
-Khi bạn tạo một Interface Endpoint  hoặc cổng, bạn có thể đính kèm một chính sách điểm cuối để kiểm soát quyền truy cập vào dịch vụ mà bạn đang kết nối. Chính sách VPC Endpoint là chính sách tài nguyên IAM mà bạn đính kèm vào điểm cuối. Nếu bạn không đính kèm chính sách khi tạo điểm cuối, thì AWS sẽ đính kèm chính sách mặc định cho bạn để cho phép toàn quyền truy cập vào dịch vụ thông qua điểm cuối.
+## 5.1. IAM Role cho Lambda
 
-Bạn có thể tạo chính sách chỉ hạn chế quyền truy cập vào các S3 bucket cụ thể. Điều này hữu ích nếu bạn chỉ muốn một số Bộ chứa S3 nhất định có thể truy cập được thông qua điểm cuối.
-
-Trong phần này, bạn sẽ tạo chính sách VPC Endpoint hạn chế quyền truy cập vào S3 bucket được chỉ định trong chính sách VPC Endpoint.
-
-![endpoint diagram](/images/5-Workshop/5.5-Policy/s3-bucket-policy.png)
-
-#### Kết nối tới EC2 và xác minh kết nối tới S3. 
-
-1. Bắt đầu một phiên AWS Session Manager mới trên máy chủ có tên là Test-Gateway-Endpoint. Từ phiên này, xác minh rằng bạn có thể liệt kê nội dung của bucket mà bạn đã tạo trong Phần 1: Truy cập S3 từ VPC.
-
-```
-aws s3 ls s3://<your-bucket-name>
-```
-![test](/images/5-Workshop/5.5-Policy/test1.png)
-
-Nội dung của bucket bao gồm hai tệp có dung lượng 1GB đã được tải lên trước đó.
-
-2. Tạo một bucket S3 mới; tuân thủ mẫu đặt tên mà bạn đã sử dụng trong Phần 1, nhưng thêm '-2' vào tên. Để các trường khác là mặc định và nhấp vào **Create**.
-
-![create bucket](/images/5-Workshop/5.5-Policy/create-bucket.png)
-
-3. Tạo bucket thành công.
-
-![Success](/images/5-Workshop/5.5-Policy/create-bucket-success.png)
-
-Policy mặc định cho phép truy cập vào tất cả các S3 Buckets thông qua VPC endpoint.
-
-4. Trong giao diện **Edit Policy**, sao chép và dán theo policy sau, thay thế yourbucketname-2 với tên bucket thứ hai của bạn. Policy này sẽ cho phép truy cập đến bucket mới thông qua VPC endpoint, nhưng không cho phép truy cập đến các bucket còn lại. Chọn **Save** để kích hoạt policy.
-
-
-```
+```json
 {
-  "Id": "Policy1631305502445",
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "Stmt1631305501021",
-      "Action": "s3:*",
-      "Effect": "Allow",
-      "Resource": [
-      				"arn:aws:s3:::yourbucketname-2",
-       				"arn:aws:s3:::yourbucketname-2/*"
-       ],
-      "Principal": "*"
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": ["ec2:StartInstances", "ec2:StopInstances", "ec2:DescribeInstances"],
+            "Resource": "arn:aws:ec2:ap-southeast-1:<account-id>:instance/<instance-id>"
+        },
+        {
+            "Effect": "Allow",
+            "Action": ["rds:StartDBInstance", "rds:StopDBInstance", "rds:DescribeDBInstances"],
+            "Resource": "arn:aws:rds:ap-southeast-1:<account-id>:db:<db-instance-id>"
+        },
+        {
+            "Effect": "Allow",
+            "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
+            "Resource": "arn:aws:logs:*:*:*"
+        }
+    ]
 }
 ```
 
-![custom policy](/images/5-Workshop/5.5-Policy/policy2.png)
+## 5.2. Lambda function
 
-Cấu hình policy thành công.
+```python
+import boto3
 
-![success](/images/5-Workshop/5.5-Policy/success.png)
+EC2_INSTANCE_ID = '<instance-id>'
+RDS_INSTANCE_ID = '<db-instance-id>'
+REGION = 'ap-southeast-1'
 
-5. Từ session của bạn trên Test-Gateway-Endpoint instance, kiểm tra truy cập đến S3 bucket bạn tạo ở bước đầu
+def lambda_handler(event, context):
+    action = event.get('action')
+    ec2 = boto3.client('ec2', region_name=REGION)
+    rds = boto3.client('rds', region_name=REGION)
 
+    if action == 'start':
+        ec2.start_instances(InstanceIds=[EC2_INSTANCE_ID])
+        try:
+            rds.start_db_instance(DBInstanceIdentifier=RDS_INSTANCE_ID)
+        except rds.exceptions.InvalidDBInstanceStateFault:
+            pass
+        return {'status': 'started'}
+
+    elif action == 'stop':
+        ec2.stop_instances(InstanceIds=[EC2_INSTANCE_ID])
+        try:
+            rds.stop_db_instance(DBInstanceIdentifier=RDS_INSTANCE_ID)
+        except rds.exceptions.InvalidDBInstanceStateFault:
+            pass
+        return {'status': 'stopped'}
+
+    return {'status': 'no action specified'}
 ```
-aws s3 ls s3://<yourbucketname>
-```
 
-Câu lệnh trả về lỗi bởi vì truy cập vào S3 bucket không có quyền trong VPC endpoint policy.
+**Quan trọng**: tăng Timeout mặc định từ 3 giây lên 30 giây (Configuration → General configuration) — gọi 2 API AWS liên tiếp thường mất hơn 3 giây.
 
-![error](/images/5-Workshop/5.5-Policy/error.png)
+## 5.3. EventBridge Scheduler — 4 lịch trình
 
-6. Trở lại home directory của bạn trên EC2 instance ```cd~```
+| Lịch | Giờ (VN, UTC+7) | Cron | Input |
+|---|---|---|---|
+| `plantify-start-morning` | 08:00 | `0 8 * * ? *` | `{"action": "start"}` |
+| `plantify-stop-evening` | 17:30 | `30 17 * * ? *` | `{"action": "stop"}` |
+| `plantify-start-night` | 20:00 | `0 20 * * ? *` | `{"action": "start"}` |
+| `plantify-stop-midnight` | 00:00 | `0 0 * * ? *` | `{"action": "stop"}` |
 
-+ Tạo file ```fallocate -l 1G test-bucket2.xyz ```
-+ Sao chép file lên bucket thứ  2 ```aws s3 cp test-bucket2.xyz s3://<your-2nd-bucket-name>```
+Mỗi lịch: Target = AWS Lambda Invoke → chọn function → Input = Constant JSON text theo bảng trên.
 
-![success](/images/5-Workshop/5.5-Policy/test2.png)
+## Lỗi thường gặp
 
-Thao tác này được cho phép bởi VPC endpoint policy.
-
-![success](/images/5-Workshop/5.5-Policy/test2-success.png)
-
-Sau đó chúng ta kiểm tra truy cập vào S3 bucket đầu tiên
-
- ```aws s3 cp test-bucket2.xyz s3://<your-1st-bucket-name>```
-
- ![fail](/images/5-Workshop/5.5-Policy/test2-fail.png)
-
- Câu lệnh xảy ra lỗi bởi vì bucket không có quyền truy cập bởi VPC endpoint policy.
-
-Trong phần này, bạn đã tạo chính sách VPC Endpoint cho Amazon S3 và sử dụng AWS CLI để kiểm tra chính sách. Các hoạt động AWS CLI liên quan đến bucket S3 ban đầu của bạn thất bại vì bạn áp dụng một chính sách chỉ cho phép truy cập đến bucket thứ hai mà bạn đã tạo. Các hoạt động AWS CLI nhắm vào bucket thứ hai của bạn thành công vì chính sách cho phép chúng. Những chính sách này có thể hữu ích trong các tình huống khi bạn cần kiểm soát quyền truy cập vào tài nguyên thông qua VPC Endpoint.
+| Lỗi | Nguyên nhân | Cách sửa |
+|---|---|---|
+| `Sandbox.Timedout` khi test Lambda | Timeout mặc định 3 giây quá ngắn | Tăng lên 30 giây trong General configuration |
+| Lịch chạy sai giờ so với dự kiến | Nhầm lẫn giữa giờ UTC và giờ địa phương — field Timezone của EventBridge Scheduler mặc định có thể đã là giờ địa phương (UTC+07:00), không cần tự quy đổi UTC nữa | Kiểm tra field Timezone của lịch trước khi tính cron, dùng thẳng giờ hiển thị trên UI |
+| Gọi `stop` khi tài nguyên đã tắt sẵn gây lỗi | RDS API không "idempotent" như EC2 — báo lỗi `InvalidDBInstanceStateFault` nếu gọi trùng trạng thái | Bọc `try/except` bắt lỗi này và bỏ qua, không cho crash |

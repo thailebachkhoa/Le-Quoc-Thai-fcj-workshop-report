@@ -8,7 +8,7 @@ pre: " <b> 1.2. </b> "
 
 ### Mục tiêu tuần 2:
 
-* Thiết kế các UML diagram, luồng làm việc theo phạm vi đề ra
+* Thiết kế các UML diagram, luồng logic theo phạm vi đề ra
 * Phác thảo database schema gắn với luồng xử lý
 * Hoàn thành các phần thô (static) của web chạy local
 
@@ -23,7 +23,7 @@ pre: " <b> 1.2. </b> "
 ### Kết quả đạt được tuần 2:
 
 * Hoàn thành "bản kiến trúc" trước khi bước vào xây dựng codebase, tạo tiền đề cho tài liệu thiết kế kiến trúc hoàn chỉnh ở tuần cuối (Tuần 8).
-* Chốt được schema.sql cho các bảng lõi: `users`, `products`, `orders`, `news`, `comments`, `faq`.
+* Chốt được schema.sql cho các bảng lõi: `users`, `products`, `orders`, `news`, `comments`. 
 
 ### Hạn chế:
 

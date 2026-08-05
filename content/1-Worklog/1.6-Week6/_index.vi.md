@@ -24,7 +24,7 @@ pre: " <b> 1.6. </b> "
 
 ### Kết quả đạt được tuần 6:
 
-* Chốt được kiến trúc xác thực cuối cùng: User & Admin đều đăng nhập bằng nút "Đăng nhập với Google" duy nhất; PHP đọc Cognito Group trong token để phân biệt vai trò; riêng Admin bị chặn thêm 1 bước nhập mã TOTP trước khi được cấp session thật.
+* Có thêm phương thức xác thực bằng bên thứ 3: User & Admin đều đăng nhập bằng nút "Đăng nhập với Google"; PHP đọc Cognito Group trong token để phân biệt vai trò; riêng Admin bị chặn thêm 1 bước nhập mã TOTP trước khi được cấp session thật.
 * Giữ lại được form đăng nhập username/password cũ song song (không xoá) để dễ rollback, đồng thời áp luôn quy tắc bắt buộc TOTP cho Admin ở cả 2 đường đăng nhập — không có đường tắt nào bỏ qua được lớp bảo vệ này.
 * Toàn bộ code liên quan (Cognito, TOTP, migration DB) đã viết xong và sẵn sàng để triển khai lên EC2 thật ở tuần sau.
 

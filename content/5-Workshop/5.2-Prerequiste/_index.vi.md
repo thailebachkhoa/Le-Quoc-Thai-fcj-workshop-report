@@ -1,242 +1,124 @@
 ---
-title : "Các bước chuẩn bị"
-date : 2024-01-01 
-weight : 2
-chapter : false
-pre : " <b> 5.2. </b> "
+title: "2. Dựng hạ tầng cơ bản: EC2 + RDS"
+weight: 2
+date: 2026-08-05
+draft: false
 ---
 
-#### IAM permissions
-Gắn IAM permission policy sau vào tài khoản aws user của bạn để triển khai và dọn dẹp tài nguyên trong workshop này.
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "VisualEditor0",
-            "Effect": "Allow",
-            "Action": [
-                "cloudformation:*",
-                "cloudwatch:*",
-                "ec2:AcceptTransitGatewayPeeringAttachment",
-                "ec2:AcceptTransitGatewayVpcAttachment",
-                "ec2:AllocateAddress",
-                "ec2:AssociateAddress",
-                "ec2:AssociateIamInstanceProfile",
-                "ec2:AssociateRouteTable",
-                "ec2:AssociateSubnetCidrBlock",
-                "ec2:AssociateTransitGatewayRouteTable",
-                "ec2:AssociateVpcCidrBlock",
-                "ec2:AttachInternetGateway",
-                "ec2:AttachNetworkInterface",
-                "ec2:AttachVolume",
-                "ec2:AttachVpnGateway",
-                "ec2:AuthorizeSecurityGroupEgress",
-                "ec2:AuthorizeSecurityGroupIngress",
-                "ec2:CreateClientVpnEndpoint",
-                "ec2:CreateClientVpnRoute",
-                "ec2:CreateCustomerGateway",
-                "ec2:CreateDhcpOptions",
-                "ec2:CreateFlowLogs",
-                "ec2:CreateInternetGateway",
-                "ec2:CreateLaunchTemplate",
-                "ec2:CreateNetworkAcl",
-                "ec2:CreateNetworkInterface",
-                "ec2:CreateNetworkInterfacePermission",
-                "ec2:CreateRoute",
-                "ec2:CreateRouteTable",
-                "ec2:CreateSecurityGroup",
-                "ec2:CreateSubnet",
-                "ec2:CreateSubnetCidrReservation",
-                "ec2:CreateTags",
-                "ec2:CreateTransitGateway",
-                "ec2:CreateTransitGatewayPeeringAttachment",
-                "ec2:CreateTransitGatewayPrefixListReference",
-                "ec2:CreateTransitGatewayRoute",
-                "ec2:CreateTransitGatewayRouteTable",
-                "ec2:CreateTransitGatewayVpcAttachment",
-                "ec2:CreateVpc",
-                "ec2:CreateVpcEndpoint",
-                "ec2:CreateVpcEndpointConnectionNotification",
-                "ec2:CreateVpcEndpointServiceConfiguration",
-                "ec2:CreateVpnConnection",
-                "ec2:CreateVpnConnectionRoute",
-                "ec2:CreateVpnGateway",
-                "ec2:DeleteCustomerGateway",
-                "ec2:DeleteFlowLogs",
-                "ec2:DeleteInternetGateway",
-                "ec2:DeleteNetworkInterface",
-                "ec2:DeleteNetworkInterfacePermission",
-                "ec2:DeleteRoute",
-                "ec2:DeleteRouteTable",
-                "ec2:DeleteSecurityGroup",
-                "ec2:DeleteSubnet",
-                "ec2:DeleteSubnetCidrReservation",
-                "ec2:DeleteTags",
-                "ec2:DeleteTransitGateway",
-                "ec2:DeleteTransitGatewayPeeringAttachment",
-                "ec2:DeleteTransitGatewayPrefixListReference",
-                "ec2:DeleteTransitGatewayRoute",
-                "ec2:DeleteTransitGatewayRouteTable",
-                "ec2:DeleteTransitGatewayVpcAttachment",
-                "ec2:DeleteVpc",
-                "ec2:DeleteVpcEndpoints",
-                "ec2:DeleteVpcEndpointServiceConfigurations",
-                "ec2:DeleteVpnConnection",
-                "ec2:DeleteVpnConnectionRoute",
-                "ec2:Describe*",
-                "ec2:DetachInternetGateway",
-                "ec2:DisassociateAddress",
-                "ec2:DisassociateRouteTable",
-                "ec2:GetLaunchTemplateData",
-                "ec2:GetTransitGatewayAttachmentPropagations",
-                "ec2:ModifyInstanceAttribute",
-                "ec2:ModifySecurityGroupRules",
-                "ec2:ModifyTransitGatewayVpcAttachment",
-                "ec2:ModifyVpcAttribute",
-                "ec2:ModifyVpcEndpoint",
-                "ec2:ReleaseAddress",
-                "ec2:ReplaceRoute",
-                "ec2:RevokeSecurityGroupEgress",
-                "ec2:RevokeSecurityGroupIngress",
-                "ec2:RunInstances",
-                "ec2:StartInstances",
-                "ec2:StopInstances",
-                "ec2:UpdateSecurityGroupRuleDescriptionsEgress",
-                "ec2:UpdateSecurityGroupRuleDescriptionsIngress",
-                "iam:AddRoleToInstanceProfile",
-                "iam:AttachRolePolicy",
-                "iam:CreateInstanceProfile",
-                "iam:CreatePolicy",
-                "iam:CreateRole",
-                "iam:DeleteInstanceProfile",
-                "iam:DeletePolicy",
-                "iam:DeleteRole",
-                "iam:DeleteRolePolicy",
-                "iam:DetachRolePolicy",
-                "iam:GetInstanceProfile",
-                "iam:GetPolicy",
-                "iam:GetRole",
-                "iam:GetRolePolicy",
-                "iam:ListPolicyVersions",
-                "iam:ListRoles",
-                "iam:PassRole",
-                "iam:PutRolePolicy",
-                "iam:RemoveRoleFromInstanceProfile",
-                "lambda:CreateFunction",
-                "lambda:DeleteFunction",
-                "lambda:DeleteLayerVersion",
-                "lambda:GetFunction",
-                "lambda:GetLayerVersion",
-                "lambda:InvokeFunction",
-                "lambda:PublishLayerVersion",
-                "logs:CreateLogGroup",
-                "logs:DeleteLogGroup",
-                "logs:DescribeLogGroups",
-                "logs:PutRetentionPolicy",
-                "route53:ChangeTagsForResource",
-                "route53:CreateHealthCheck",
-                "route53:CreateHostedZone",
-                "route53:CreateTrafficPolicy",
-                "route53:DeleteHostedZone",
-                "route53:DisassociateVPCFromHostedZone",
-                "route53:GetHostedZone",
-                "route53:ListHostedZones",
-                "route53domains:ListDomains",
-                "route53domains:ListOperations",
-                "route53domains:ListTagsForDomain",
-                "route53resolver:AssociateResolverEndpointIpAddress",
-                "route53resolver:AssociateResolverRule",
-                "route53resolver:CreateResolverEndpoint",
-                "route53resolver:CreateResolverRule",
-                "route53resolver:DeleteResolverEndpoint",
-                "route53resolver:DeleteResolverRule",
-                "route53resolver:DisassociateResolverEndpointIpAddress",
-                "route53resolver:DisassociateResolverRule",
-                "route53resolver:GetResolverEndpoint",
-                "route53resolver:GetResolverRule",
-                "route53resolver:ListResolverEndpointIpAddresses",
-                "route53resolver:ListResolverEndpoints",
-                "route53resolver:ListResolverRuleAssociations",
-                "route53resolver:ListResolverRules",
-                "route53resolver:ListTagsForResource",
-                "route53resolver:UpdateResolverEndpoint",
-                "route53resolver:UpdateResolverRule",
-                "s3:AbortMultipartUpload",
-                "s3:CreateBucket",
-                "s3:DeleteBucket",
-                "s3:DeleteObject",
-                "s3:GetAccountPublicAccessBlock",
-                "s3:GetBucketAcl",
-                "s3:GetBucketOwnershipControls",
-                "s3:GetBucketPolicy",
-                "s3:GetBucketPolicyStatus",
-                "s3:GetBucketPublicAccessBlock",
-                "s3:GetObject",
-                "s3:GetObjectVersion",
-                "s3:GetBucketVersioning",
-                "s3:ListAccessPoints",
-                "s3:ListAccessPointsForObjectLambda",
-                "s3:ListAllMyBuckets",
-                "s3:ListBucket",
-                "s3:ListBucketMultipartUploads",
-                "s3:ListBucketVersions",
-                "s3:ListJobs",
-                "s3:ListMultipartUploadParts",
-                "s3:ListMultiRegionAccessPoints",
-                "s3:ListStorageLensConfigurations",
-                "s3:PutAccountPublicAccessBlock",
-                "s3:PutBucketAcl",
-                "s3:PutBucketPolicy",
-                "s3:PutBucketPublicAccessBlock",
-                "s3:PutObject",
-                "secretsmanager:CreateSecret",
-                "secretsmanager:DeleteSecret",
-                "secretsmanager:DescribeSecret",
-                "secretsmanager:GetSecretValue",
-                "secretsmanager:ListSecrets",
-                "secretsmanager:ListSecretVersionIds",
-                "secretsmanager:PutResourcePolicy",
-                "secretsmanager:TagResource",
-                "secretsmanager:UpdateSecret",
-                "sns:ListTopics",
-                "ssm:DescribeInstanceProperties",
-                "ssm:DescribeSessions",
-                "ssm:GetConnectionStatus",
-                "ssm:GetParameters",
-                "ssm:ListAssociations",
-                "ssm:ResumeSession",
-                "ssm:StartSession",
-                "ssm:TerminateSession"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
+## 2.1. Tạo VPC (nếu tài khoản chưa có sẵn)
 
+Tài khoản AWS mới có thể chưa có VPC nào trong region đang chọn. Vào **EC2 → Launch Instance**, nếu thấy cảnh báo vàng "no VPCs in this region", bấm link **"create a new default VPC"** — AWS tự tạo VPC + Subnet ở mỗi Availability Zone + Internet Gateway, không cần cấu hình gì thêm.
+
+## 2.2. Tạo EC2 instance
+
+- AMI: Ubuntu (bản LTS mới nhất có sẵn)
+- Instance type: `t3.micro` (Free Tier)
+- Storage: 20GB gp3
+- Security Group: SSH (port 22) giới hạn **"My IP"**, HTTP (80) và HTTPS (443) mở **Anywhere**
+- Key pair: tạo mới, tải về `.pem`, lưu cẩn thận (chỉ tải được 1 lần)
+
+## 2.3. Kết nối SSH
+
+```bash
+chmod 400 ten-file-key.pem
+ssh -i ten-file-key.pem ubuntu@<Public-IP>
 ```
 
-#### Khởi tạo tài nguyên bằng CloudFormation
+## 2.4. Cài phần mềm cần thiết
 
-Trong lab này, chúng ta sẽ dùng N.Virginia region (us-east-1).
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y apache2
+sudo apt install -y php libapache2-mod-php php-mysql php-mbstring php-curl php-xml php-zip php-gd php-fileinfo
+sudo apt install -y ffmpeg
+sudo apt install -y git unzip mysql-client-core
+```
 
-Để chuẩn bị cho môi trường làm workshop, chúng ta deploy CloudFormation template sau (click link): [PrivateLinkWorkshop ](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?templateURL=https://s3.us-east-1.amazonaws.com/reinvent-endpoints-builders-session/Nested.yaml&stackName=PLCloudSetup). Để nguyên các lựa chọn mặc định.
+## 2.5. Đưa code lên server
 
-![create stack](/images/5-Workshop/5.2-Prerequisite/create-stack1.png)
+```bash
+cd /var/www
+sudo git clone https://github.com/thailebachkhoa/FCAJ-Intern-Project.git plantify
+sudo chown -R www-data:www-data /var/www/plantify
+sudo chmod -R 775 /var/www/plantify/storage
+```
 
-+ Lựa chọn 2 mục acknowledgement 
-+ Chọn Create stack
+## 2.6. Cấu hình Apache Virtual Host
 
-![create stack](/images/5-Workshop/5.2-Prerequisite/create-stack2.png)
+```bash
+sudo nano /etc/apache2/sites-available/plantify.conf
+```
 
-Quá trình triển khai CloudFormation cần khoảng 15 phút để hoàn thành.
+```apache
+<VirtualHost *:80>
+    ServerName <Public-IP-hoặc-domain>
+    DocumentRoot /var/www/plantify/public
 
-![complete](/images/5-Workshop/5.2-Prerequisite/complete.png)
+    <Directory /var/www/plantify/public>
+        AllowOverride All
+        Require all granted
+    </Directory>
 
-+ 2 VPCs đã được tạo
+    ErrorLog ${APACHE_LOG_DIR}/plantify_error.log
+    CustomLog ${APACHE_LOG_DIR}/plantify_access.log combined
+</VirtualHost>
+```
 
-![vpcs](/images/5-Workshop/5.2-Prerequisite/vpcs.png)
+```bash
+sudo a2ensite plantify.conf
+sudo a2dissite 000-default.conf
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+```
 
-+ 3 EC2s đã được tạo
+**Lưu ý quan trọng**: `DocumentRoot` phải trỏ vào `public/`, không phải root project — nếu trỏ nhầm, file `.env` (chứa mật khẩu database) sẽ bị lộ trực tiếp qua URL.
 
-![EC2](/images/5-Workshop/5.2-Prerequisite/ec2.png)
+## 2.7. Tạo RDS MySQL
+
+- Engine: MySQL, Template: **Free tier**
+- Instance: `db.t4g.micro`
+- Public access: **No**
+- VPC security group: tạo mới
+- Initial database name: `plantify` (nếu bỏ trống, phải tự `CREATE DATABASE` sau)
+
+## 2.8. Kết nối EC2 ↔ RDS
+
+Trong RDS Console, tab **Connectivity & security → Connected compute resources → Set up EC2 connection** → chọn đúng instance EC2 — AWS tự động thêm rule Security Group cho phép EC2 kết nối vào RDS, không cần tự sửa Security Group tay.
+
+## 2.9. Import schema
+
+```bash
+mysql -h <rds-endpoint> -P 3306 -u admin -p
+```
+```sql
+CREATE DATABASE plantify CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+exit;
+```
+```bash
+mysql -h <rds-endpoint> -P 3306 -u admin -p plantify < /var/www/plantify/database/migrations/schema.sql
+```
+
+## 2.10. Cập nhật `.env` và test
+
+```bash
+sudo nano /var/www/plantify/.env
+```
+```
+DB_HOST=<rds-endpoint>
+DB_PORT=3306
+DB_DATABASE=plantify
+DB_USERNAME=admin
+DB_PASSWORD=<mật khẩu thật>
+```
+
+Mở `http://<Public-IP>` trên trình duyệt — phải thấy trang chủ Plantify hiện lên bình thường.
+
+## Lỗi thường gặp
+
+| Lỗi | Nguyên nhân | Cách sửa |
+|---|---|---|
+| SSH bị treo, không phản hồi | Security Group vẫn whitelist IP cũ trong khi IP mạng đã đổi | Kiểm tra IP hiện tại tại `checkip.amazonaws.com`, sửa lại rule SSH thành "My IP" |
+| `chmod 400` báo "Permissions too open" dù đã chạy | File `.pem` đang nằm trên ổ Windows (`/mnt/d/...` qua WSL) — `chmod` không có hiệu lực thật trên NTFS | Copy file key vào `~/.ssh/` (filesystem Linux thật) rồi `chmod 400` lại |
+| `mysql: command not found` | Chưa cài MySQL client trên EC2 (khác với PHP extension `php-mysql`) | `sudo apt install -y mysql-client-core` |
+| Import schema báo "No such file or directory" | Sai đường dẫn — file nằm trong `database/migrations/`, không phải `database/` | Kiểm tra bằng `ls -la database/migrations` trước khi import |
+| RDS không có database `plantify` dù đã tạo | Bỏ trống "Initial database name" lúc tạo RDS | Tự `CREATE DATABASE plantify ...` qua `mysql` CLI |
