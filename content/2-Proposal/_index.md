@@ -45,10 +45,10 @@ The platform runs on a straightforward AWS stack: end users reach the PHP applic
 ### 4. Technical Implementation
 **Implementation Phases**
 The project follows four phases across the internship:
-- Review the existing Plantify PHP/MySQL codebase and design the target AWS architecture (research phase, Week 1–2).
-- Provision core infrastructure — EC2, RDS, IAM roles, DuckDNS domain — and get the application running in the cloud for the first time (Week 3–5).
-- Layer on operational and security features — S3 automated backups with cron, CloudWatch alarms with SNS notifications, and Cognito + Google + TOTP authentication (Week 5–6).
-- Debug, harden, and document — resolve real integration issues (OAuth scope errors, missing identity providers, SQL binding bugs), then write up the architecture and deployment guide (Week 7–8).
+- Review the existing Plantify PHP/MySQL codebase and design the target AWS architecture 
+- Provision core infrastructure — EC2, RDS, IAM roles, DuckDNS domain — and get the application running in the cloud for the first time 
+- Layer on operational and security features — S3 automated backups with cron, CloudWatch alarms with SNS notifications, and Cognito + Google + TOTP authentication 
+- Debug, harden, and document — resolve real integration issues (OAuth scope errors, missing identity providers, SQL binding bugs), then write up the architecture and deployment guide 
 
 **Technical Requirements**
 - **Application layer**: PHP 8.x with `pdo_mysql`, `fileinfo`, and `mbstring` extensions; MySQL/MariaDB; Apache with `mod_rewrite`.

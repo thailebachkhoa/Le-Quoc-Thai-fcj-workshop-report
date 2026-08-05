@@ -53,10 +53,10 @@ Nền tảng chạy trên một kiến trúc AWS đơn giản: người dùng tr
 ### 4. Triển khai kỹ thuật
 *Các giai đoạn triển khai*
 Dự án trải qua 4 giai đoạn trong suốt kỳ thực tập:
-- Rà soát mã nguồn PHP/MySQL sẵn có của Plantify và thiết kế kiến trúc AWS mục tiêu (giai đoạn nghiên cứu, Tuần 1–2).
-- Dựng hạ tầng lõi — EC2, RDS, IAM role, tên miền DuckDNS — và đưa ứng dụng chạy trên cloud lần đầu tiên (Tuần 3–5).
-- Bổ sung các tính năng vận hành và bảo mật — sao lưu tự động S3 qua cron, CloudWatch alarm với thông báo SNS, và xác thực Cognito + Google + TOTP (Tuần 5–6).
-- Debug, gia cố và viết tài liệu — xử lý các sự cố tích hợp thật (lỗi OAuth scope, thiếu identity provider, bug SQL binding), sau đó viết tài liệu kiến trúc và hướng dẫn triển khai (Tuần 7–8).
+- Rà soát mã nguồn PHP/MySQL sẵn có của Plantify và thiết kế kiến trúc AWS mục tiêu 
+- Dựng hạ tầng lõi — EC2, RDS, IAM role, tên miền DuckDNS — và đưa ứng dụng chạy trên cloud lần đầu tiên 
+- Bổ sung các tính năng vận hành và bảo mật — sao lưu tự động S3 qua cron, CloudWatch alarm với thông báo SNS, và xác thực Cognito + Google + TOTP 
+- Debug, gia cố và viết tài liệu — xử lý các sự cố tích hợp thật (lỗi OAuth scope, thiếu identity provider, bug SQL binding), sau đó viết tài liệu kiến trúc và hướng dẫn triển khai 
 
 *Yêu cầu kỹ thuật*
 - **Tầng ứng dụng**: PHP 8.x với các extension `pdo_mysql`, `fileinfo`, `mbstring`; MySQL/MariaDB; Apache có `mod_rewrite`.
