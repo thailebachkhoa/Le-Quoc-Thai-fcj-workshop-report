@@ -33,6 +33,7 @@ The platform runs on a straightforward AWS stack: end users reach the PHP applic
 - **Amazon CloudWatch + Amazon SNS**: Monitors EC2 CPU, RDS free storage, and RDS connection count; sends email alarms.
 - **Amazon Cognito**: Hosted authentication and session/token handling, federated with Google OAuth.
 - **Google Cloud OAuth Client**: Identity provider for "Sign in with Google."
+- **EventBride + Lambda**: Put EC2 and RDS in schedule
 
 ### Component Design
 - **Web Application (EC2)**: Custom PHP MVC app — Controllers, Core (Auth middleware, PDO Database singleton, Env loader, Helpers), Models, and Views — serving the storefront, member dashboard, and admin panel.

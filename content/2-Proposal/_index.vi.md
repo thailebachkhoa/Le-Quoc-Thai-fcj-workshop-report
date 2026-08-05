@@ -41,6 +41,7 @@ Nền tảng chạy trên một kiến trúc AWS đơn giản: người dùng tr
 - **Amazon CloudWatch + Amazon SNS**: Giám sát CPU của EC2, dung lượng trống và số kết nối của RDS; gửi cảnh báo qua email.
 - **Amazon Cognito**: Xử lý xác thực và phiên đăng nhập/token, liên kết với Google OAuth.
 - **Google Cloud OAuth Client**: Nhà cung cấp danh tính cho tính năng "Đăng nhập bằng Google".
+- **EventBride + Lambda**: Tự động hóa tắt EC2 và RDS theo lịch
 
 ### Thiết kế thành phần
 - **Ứng dụng web (EC2)**: Ứng dụng PHP MVC tự viết — gồm Controllers, Core (middleware Auth, PDO Database singleton, đọc Env, Helpers), Models và Views — phục vụ trang bán hàng, dashboard thành viên và bảng admin.

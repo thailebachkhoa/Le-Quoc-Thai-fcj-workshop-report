@@ -14,12 +14,14 @@ pre: " <b> 1.5. </b> "
 
 ### Tasks to be carried out this week:
 
+
 | No. | Task | Start Date | Estimated Time |
 | :-: | :--- | :-: | :-: |
-| **1** | - Provision an EC2 instance (Ubuntu, t4g.micro), configure the Security Group (open ports 80/443/22) <br> - Install Apache + PHP 8 on EC2 | `06/07/2026` | 2 days |
-| **2** | - Provision Amazon RDS (MySQL 8.4, t4g.micro), configure the Security Group to allow EC2 to connect to RDS <br> - Import schema.sql into RDS | `08/07/2026` | 1 day |
-| **3** | - Register a free domain via DuckDNS, point it to the EC2 Elastic IP <br> - Configure HTTPS (Let's Encrypt/certbot) | `09/07/2026` | 1 day |
-| **4** | - Deploy the code from GitHub to EC2 (git clone/git pull), configure `.env`, test the full flow that already worked on localhost | `10/07/2026` | 2 days <br> - Make EC2 and RDS open-close automatically via Lambda and EventBride |
+| **1** | - Provision an EC2 instance (Ubuntu, t4g.micro), configure Security Group (open ports 80/443/22) <br> - Install Apache + PHP 8 on EC2 <br> - Register a free domain via DuckDNS, point it to the EC2 Elastic IP <br> - Configure HTTPS (Let's Encrypt/certbot) | `06/07/2026` | 2 days |
+| **2** | - Provision Amazon RDS (MySQL 8.4, t4g.micro), configure Security Group to allow EC2 to connect to RDS <br> - Import schema.sql into RDS <br> - Deploy code from GitHub to EC2 (git clone/git pull), configure `.env`, test the full flow that already worked on localhost | `08/07/2026` | 1 day |
+| **3** | - Write a Lambda function based on context and event parameters <br> - Create a separate IAM role for the above Lambda function (with permissions to only stop/start specific resources) | `09/07/2026` | 2 days |
+| **4** | - Create EventBridge Scheduler with 4 fixed daily schedules, each pointing to the same Lambda but with different JSON payloads <br> - Add a try/except block to avoid invoking overlapping RDS states <br> - Mechanism: Scheduler -(calls)-> Lambda function --(AWS SDK for Python)-> Stop/Start EC2/RDS (modify the error-index file in EC2 to notify that the website is closed, ensuring UX) | `10/07/2026` | 1 day |
+
 
 ### Week 5 Achievements:
 

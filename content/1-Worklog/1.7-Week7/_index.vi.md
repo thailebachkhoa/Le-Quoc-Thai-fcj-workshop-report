@@ -11,6 +11,7 @@ pre: " <b> 1.7. </b> "
 * Triển khai thật toàn bộ luồng đăng nhập Google + Cognito + TOTP lên EC2 production
 * Phát hiện và xử lý dứt điểm các lỗi cấu hình/lỗi code phát sinh khi chạy thật
 * Đảm bảo cả 2 vai trò (Member, Admin) đăng nhập được ổn định
+* Lập các dịch vụ phụ trợ nhằm đảm bảo bảo trì lâu dài
 
 ### Các công việc cần triển khai trong tuần này:
 
@@ -19,7 +20,7 @@ pre: " <b> 1.7. </b> "
 | **1** | - Đưa code Cognito/TOTP lên EC2, `composer install`, chạy migration DB | `20/07/2026` | 1 ngày |
 | **2** | - Xử lý lỗi cấu hình OAuth: `invalid_scope`, thiếu Google trong danh sách Identity Provider của App Client | `21/07/2026` | 2 ngày |
 | **3** | - Xử lý lỗi runtime: lỗi 500 khi tạo user mới từ Cognito (SQL bind sai tham số) | `23/07/2026` | 1 ngày |
-| **4** | - Kiểm thử toàn bộ luồng: Member đăng nhập Google, Admin đăng nhập Google + TOTP, đăng nhập username/password cũ | `24/07/2026` | 2 ngày |
+| **4** | - Kiểm thử toàn bộ luồng: Member đăng nhập Google, Admin đăng nhập Google + TOTP, đăng nhập username/password cũ <br> - Gắn CloudWatch cho EC2 và RDS ( Notification là Gmail từ dịch vụ SNS ) để thông báo lưu lượng đột biến từ máy chủ| `24/07/2026` | 2 ngày |
 | **5** | - Đồng bộ lại code đã sửa trực tiếp trên EC2 ngược về GitHub, dọn dẹp bảo mật (đổi mật khẩu RDS, reset Google Client Secret) | `26/07/2026` | 1 ngày |
 
 ### Kết quả đạt được tuần 7:

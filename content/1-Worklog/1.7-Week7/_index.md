@@ -11,6 +11,7 @@ pre: " <b> 1.7. </b> "
 * Deploy the full Google + Cognito + TOTP login flow to the production EC2 instance for real
 * Identify and fully resolve configuration/code issues that surfaced in production
 * Ensure both roles (Member, Admin) can log in reliably
+* Put support-services to monitor product in the future
 
 ### Tasks to be carried out this week:
 
@@ -19,7 +20,7 @@ pre: " <b> 1.7. </b> "
 | **1** | - Deploy the Cognito/TOTP code to EC2, run `composer install`, run the DB migration | `20/07/2026` | 1 day |
 | **2** | - Fix OAuth configuration errors: `invalid_scope`, Google missing from the App Client's Identity Provider list | `21/07/2026` | 2 days |
 | **3** | - Fix a runtime error: HTTP 500 when creating a new user from Cognito (SQL bind parameter mismatch) | `23/07/2026` | 1 day |
-| **4** | - Test the full flow: Member logging in with Google, Admin logging in with Google + TOTP, and the legacy username/password login | `24/07/2026` | 2 days |
+| **4** | - Test the full flow: Member Google login, Admin Google login + TOTP, and legacy username/password login <br> - Set up CloudWatch for EC2 and RDS (Gmail notifications via SNS) to alert on sudden server traffic spikes | `24/07/2026` | 2 days |
 | **5** | - Sync the code changes made directly on EC2 back to GitHub, and clean up security (rotate the RDS password, reset the Google Client Secret) | `26/07/2026` | 1 day |
 
 ### Week 7 Achievements:
