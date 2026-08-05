@@ -1,242 +1,124 @@
 ---
-title : "Prerequiste"
-date : 2024-01-01 
-weight : 2 
-chapter : false
-pre : " <b> 5.2. </b> "
+title: "2. Basic Infrastructure Setup: EC2 + RDS"
+weight: 2
+date: 2026-08-05
+draft: false
 ---
 
-#### IAM permissions
-Add the following IAM permission policy to your user account to deploy and cleanup this workshop.
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "VisualEditor0",
-            "Effect": "Allow",
-            "Action": [
-                "cloudformation:*",
-                "cloudwatch:*",
-                "ec2:AcceptTransitGatewayPeeringAttachment",
-                "ec2:AcceptTransitGatewayVpcAttachment",
-                "ec2:AllocateAddress",
-                "ec2:AssociateAddress",
-                "ec2:AssociateIamInstanceProfile",
-                "ec2:AssociateRouteTable",
-                "ec2:AssociateSubnetCidrBlock",
-                "ec2:AssociateTransitGatewayRouteTable",
-                "ec2:AssociateVpcCidrBlock",
-                "ec2:AttachInternetGateway",
-                "ec2:AttachNetworkInterface",
-                "ec2:AttachVolume",
-                "ec2:AttachVpnGateway",
-                "ec2:AuthorizeSecurityGroupEgress",
-                "ec2:AuthorizeSecurityGroupIngress",
-                "ec2:CreateClientVpnEndpoint",
-                "ec2:CreateClientVpnRoute",
-                "ec2:CreateCustomerGateway",
-                "ec2:CreateDhcpOptions",
-                "ec2:CreateFlowLogs",
-                "ec2:CreateInternetGateway",
-                "ec2:CreateLaunchTemplate",
-                "ec2:CreateNetworkAcl",
-                "ec2:CreateNetworkInterface",
-                "ec2:CreateNetworkInterfacePermission",
-                "ec2:CreateRoute",
-                "ec2:CreateRouteTable",
-                "ec2:CreateSecurityGroup",
-                "ec2:CreateSubnet",
-                "ec2:CreateSubnetCidrReservation",
-                "ec2:CreateTags",
-                "ec2:CreateTransitGateway",
-                "ec2:CreateTransitGatewayPeeringAttachment",
-                "ec2:CreateTransitGatewayPrefixListReference",
-                "ec2:CreateTransitGatewayRoute",
-                "ec2:CreateTransitGatewayRouteTable",
-                "ec2:CreateTransitGatewayVpcAttachment",
-                "ec2:CreateVpc",
-                "ec2:CreateVpcEndpoint",
-                "ec2:CreateVpcEndpointConnectionNotification",
-                "ec2:CreateVpcEndpointServiceConfiguration",
-                "ec2:CreateVpnConnection",
-                "ec2:CreateVpnConnectionRoute",
-                "ec2:CreateVpnGateway",
-                "ec2:DeleteCustomerGateway",
-                "ec2:DeleteFlowLogs",
-                "ec2:DeleteInternetGateway",
-                "ec2:DeleteNetworkInterface",
-                "ec2:DeleteNetworkInterfacePermission",
-                "ec2:DeleteRoute",
-                "ec2:DeleteRouteTable",
-                "ec2:DeleteSecurityGroup",
-                "ec2:DeleteSubnet",
-                "ec2:DeleteSubnetCidrReservation",
-                "ec2:DeleteTags",
-                "ec2:DeleteTransitGateway",
-                "ec2:DeleteTransitGatewayPeeringAttachment",
-                "ec2:DeleteTransitGatewayPrefixListReference",
-                "ec2:DeleteTransitGatewayRoute",
-                "ec2:DeleteTransitGatewayRouteTable",
-                "ec2:DeleteTransitGatewayVpcAttachment",
-                "ec2:DeleteVpc",
-                "ec2:DeleteVpcEndpoints",
-                "ec2:DeleteVpcEndpointServiceConfigurations",
-                "ec2:DeleteVpnConnection",
-                "ec2:DeleteVpnConnectionRoute",
-                "ec2:Describe*",
-                "ec2:DetachInternetGateway",
-                "ec2:DisassociateAddress",
-                "ec2:DisassociateRouteTable",
-                "ec2:GetLaunchTemplateData",
-                "ec2:GetTransitGatewayAttachmentPropagations",
-                "ec2:ModifyInstanceAttribute",
-                "ec2:ModifySecurityGroupRules",
-                "ec2:ModifyTransitGatewayVpcAttachment",
-                "ec2:ModifyVpcAttribute",
-                "ec2:ModifyVpcEndpoint",
-                "ec2:ReleaseAddress",
-                "ec2:ReplaceRoute",
-                "ec2:RevokeSecurityGroupEgress",
-                "ec2:RevokeSecurityGroupIngress",
-                "ec2:RunInstances",
-                "ec2:StartInstances",
-                "ec2:StopInstances",
-                "ec2:UpdateSecurityGroupRuleDescriptionsEgress",
-                "ec2:UpdateSecurityGroupRuleDescriptionsIngress",
-                "iam:AddRoleToInstanceProfile",
-                "iam:AttachRolePolicy",
-                "iam:CreateInstanceProfile",
-                "iam:CreatePolicy",
-                "iam:CreateRole",
-                "iam:DeleteInstanceProfile",
-                "iam:DeletePolicy",
-                "iam:DeleteRole",
-                "iam:DeleteRolePolicy",
-                "iam:DetachRolePolicy",
-                "iam:GetInstanceProfile",
-                "iam:GetPolicy",
-                "iam:GetRole",
-                "iam:GetRolePolicy",
-                "iam:ListPolicyVersions",
-                "iam:ListRoles",
-                "iam:PassRole",
-                "iam:PutRolePolicy",
-                "iam:RemoveRoleFromInstanceProfile",
-                "lambda:CreateFunction",
-                "lambda:DeleteFunction",
-                "lambda:DeleteLayerVersion",
-                "lambda:GetFunction",
-                "lambda:GetLayerVersion",
-                "lambda:InvokeFunction",
-                "lambda:PublishLayerVersion",
-                "logs:CreateLogGroup",
-                "logs:DeleteLogGroup",
-                "logs:DescribeLogGroups",
-                "logs:PutRetentionPolicy",
-                "route53:ChangeTagsForResource",
-                "route53:CreateHealthCheck",
-                "route53:CreateHostedZone",
-                "route53:CreateTrafficPolicy",
-                "route53:DeleteHostedZone",
-                "route53:DisassociateVPCFromHostedZone",
-                "route53:GetHostedZone",
-                "route53:ListHostedZones",
-                "route53domains:ListDomains",
-                "route53domains:ListOperations",
-                "route53domains:ListTagsForDomain",
-                "route53resolver:AssociateResolverEndpointIpAddress",
-                "route53resolver:AssociateResolverRule",
-                "route53resolver:CreateResolverEndpoint",
-                "route53resolver:CreateResolverRule",
-                "route53resolver:DeleteResolverEndpoint",
-                "route53resolver:DeleteResolverRule",
-                "route53resolver:DisassociateResolverEndpointIpAddress",
-                "route53resolver:DisassociateResolverRule",
-                "route53resolver:GetResolverEndpoint",
-                "route53resolver:GetResolverRule",
-                "route53resolver:ListResolverEndpointIpAddresses",
-                "route53resolver:ListResolverEndpoints",
-                "route53resolver:ListResolverRuleAssociations",
-                "route53resolver:ListResolverRules",
-                "route53resolver:ListTagsForResource",
-                "route53resolver:UpdateResolverEndpoint",
-                "route53resolver:UpdateResolverRule",
-                "s3:AbortMultipartUpload",
-                "s3:CreateBucket",
-                "s3:DeleteBucket",
-                "s3:DeleteObject",
-                "s3:GetAccountPublicAccessBlock",
-                "s3:GetBucketAcl",
-                "s3:GetBucketOwnershipControls",
-                "s3:GetBucketPolicy",
-                "s3:GetBucketPolicyStatus",
-                "s3:GetBucketPublicAccessBlock",
-                "s3:GetObject",
-                "s3:GetObjectVersion",
-                "s3:GetBucketVersioning",
-                "s3:ListAccessPoints",
-                "s3:ListAccessPointsForObjectLambda",
-                "s3:ListAllMyBuckets",
-                "s3:ListBucket",
-                "s3:ListBucketMultipartUploads",
-                "s3:ListBucketVersions",
-                "s3:ListJobs",
-                "s3:ListMultipartUploadParts",
-                "s3:ListMultiRegionAccessPoints",
-                "s3:ListStorageLensConfigurations",
-                "s3:PutAccountPublicAccessBlock",
-                "s3:PutBucketAcl",
-                "s3:PutBucketPolicy",
-                "s3:PutBucketPublicAccessBlock",
-                "s3:PutObject",
-                "secretsmanager:CreateSecret",
-                "secretsmanager:DeleteSecret",
-                "secretsmanager:DescribeSecret",
-                "secretsmanager:GetSecretValue",
-                "secretsmanager:ListSecrets",
-                "secretsmanager:ListSecretVersionIds",
-                "secretsmanager:PutResourcePolicy",
-                "secretsmanager:TagResource",
-                "secretsmanager:UpdateSecret",
-                "sns:ListTopics",
-                "ssm:DescribeInstanceProperties",
-                "ssm:DescribeSessions",
-                "ssm:GetConnectionStatus",
-                "ssm:GetParameters",
-                "ssm:ListAssociations",
-                "ssm:ResumeSession",
-                "ssm:StartSession",
-                "ssm:TerminateSession"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
+## 2.1. Creating a VPC (If Not Already Present in Your Account)
 
+A new AWS account might not have a VPC in the selected region. Go to **EC2 → Launch Instance**; if a yellow warning saying "no VPCs in this region" appears, click the link **"create a new default VPC"** — AWS will automatically create a VPC + Subnets in each Availability Zone + an Internet Gateway, requiring no additional configuration.
+
+## 2.2. Launching an EC2 Instance
+
+- AMI: Ubuntu (latest available LTS version)
+- Instance type: `t3.micro` (Free Tier)
+- Storage: 20GB gp3
+- Security Group: SSH (port 22) restricted to **"My IP"**, HTTP (80) and HTTPS (443) set to **Anywhere**
+- Key pair: Create a new key pair, download the `.pem` file, and save it securely (can only be downloaded once)
+
+## 2.3. Connecting via SSH
+
+```bash
+chmod 400 your-key-file.pem
+ssh -i your-key-file.pem ubuntu@<Public-IP>
 ```
 
-#### Provision resources using CloudFormation
+## 2.4. Installing Required Software
 
-In this lab, we will use **N.Virginia region (us-east-1)**.
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y apache2
+sudo apt install -y php libapache2-mod-php php-mysql php-mbstring php-curl php-xml php-zip php-gd php-fileinfo
+sudo apt install -y ffmpeg
+sudo apt install -y git unzip mysql-client-core
+```
 
-To prepare the workshop environment, deploy this **CloudFormation Template** (click link): [PrivateLinkWorkshop ](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?templateURL=https://s3.us-east-1.amazonaws.com/reinvent-endpoints-builders-session/Nested.yaml&stackName=PLCloudSetup). Accept all of the defaults when deploying the template. 
+## 2.5. Deploying Code to Server
 
-![create stack](/images/5-Workshop/5.2-Prerequisite/create-stack1.png)
+```bash
+cd /var/www
+sudo git clone [https://github.com/thailebachkhoa/FCAJ-Intern-Project.git](https://github.com/thailebachkhoa/FCAJ-Intern-Project.git) plantify
+sudo chown -R www-data:www-data /var/www/plantify
+sudo chmod -R 775 /var/www/plantify/storage
+```
 
-+ Tick 2 acknowledgement boxes
-+ Choose **Create stack**
+## 2.6. Configuring Apache Virtual Host
 
-![create stack](/images/5-Workshop/5.2-Prerequisite/create-stack2.png)
+```bash
+sudo nano /etc/apache2/sites-available/plantify.conf
+```
 
-The **ClouddFormation** deployment requires about 15 minutes to complete.
+```apache
+<VirtualHost *:80>
+    ServerName <Public-IP-or-domain>
+    DocumentRoot /var/www/plantify/public
 
-![complete](/images/5-Workshop/5.2-Prerequisite/complete.png)
+    <Directory /var/www/plantify/public>
+        AllowOverride All
+        Require all granted
+    </Directory>
 
-+ **2 VPCs** have been created
+    ErrorLog ${APACHE_LOG_DIR}/plantify_error.log
+    CustomLog ${APACHE_LOG_DIR}/plantify_access.log combined
+</VirtualHost>
+```
 
-![vpcs](/images/5-Workshop/5.2-Prerequisite/vpcs.png)
+```bash
+sudo a2ensite plantify.conf
+sudo a2dissite 000-default.conf
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+```
 
-+ **3 EC2s** have been created
+**Important note**: `DocumentRoot` must point to `public/`, not the project root — if pointed incorrectly, the `.env` file (containing database passwords) will be directly exposed via URL.
 
-![EC2](/images/5-Workshop/5.2-Prerequisite/ec2.png)
+## 2.7. Creating an RDS MySQL Instance
+
+- Engine: MySQL, Template: **Free tier**
+- Instance: `db.t4g.micro`
+- Public access: **No**
+- VPC security group: Create new
+- Initial database name: `plantify` (if left blank, you must manually execute `CREATE DATABASE` later)
+
+## 2.8. Connecting EC2 ↔ RDS
+
+In the RDS Console, under the **Connectivity & security** tab → **Connected compute resources → Set up EC2 connection** → select the correct EC2 instance — AWS automatically adds the required Security Group rule allowing the EC2 instance to connect to RDS, eliminating the need to manually modify Security Groups.
+
+## 2.9. Importing Schema
+
+```bash
+mysql -h <rds-endpoint> -P 3306 -u admin -p
+```
+```sql
+CREATE DATABASE plantify CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+exit;
+```
+```bash
+mysql -h <rds-endpoint> -P 3306 -u admin -p plantify < /var/www/plantify/database/migrations/schema.sql
+```
+
+## 2.10. Updating `.env` and Testing
+
+```bash
+sudo nano /var/www/plantify/.env
+```
+```
+DB_HOST=<rds-endpoint>
+DB_PORT=3306
+DB_DATABASE=plantify
+DB_USERNAME=admin
+DB_PASSWORD=<actual-password>
+```
+
+Open `http://<Public-IP>` in your browser — the Plantify homepage should render normally.
+
+## Common Issues
+
+| Issue | Cause | Solution |
+|---|---|---|
+| SSH freezes or does not respond | Security Group is still whitelisting an old IP while your network IP has changed | Check your current IP at `checkip.amazonaws.com`, then update the SSH rule to "My IP" |
+| `chmod 400` warns "Permissions too open" despite being executed | The `.pem` file is located on a Windows drive (`/mnt/d/...` via WSL) — `chmod` does not take real effect on NTFS | Copy the key file to `~/.ssh/` (actual Linux filesystem) and rerun `chmod 400` |
+| `mysql: command not found` | MySQL client is not installed on the EC2 instance (distinct from the `php-mysql` PHP extension) | `sudo apt install -y mysql-client-core` |
+| Importing schema returns "No such file or directory" | Incorrect path — the file is inside `database/migrations/`, not `database/` | Verify using `ls -la database/migrations` before importing |
+| RDS has no `plantify` database despite creation | Left "Initial database name" blank when creating RDS | Manually run `CREATE DATABASE plantify ...` via `mysql` CLI |

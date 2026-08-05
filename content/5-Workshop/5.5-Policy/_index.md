@@ -1,12 +1,11 @@
 ---
-
-title: "5. Automating cost optimization with Lambda and EventBridge"
+title: "5. Cost Saving Automation: Lambda + EventBridge"
 weight: 5
 date: 2026-08-05
 draft: false
-------------
+---
 
-## 5.1. IAM role for Lambda
+## 5.1. IAM Role for Lambda
 
 ```json
 {
@@ -14,38 +13,24 @@ draft: false
     "Statement": [
         {
             "Effect": "Allow",
-            "Action": [
-                "ec2:StartInstances",
-                "ec2:StopInstances",
-                "ec2:DescribeInstances"
-            ],
+            "Action": ["ec2:StartInstances", "ec2:StopInstances", "ec2:DescribeInstances"],
             "Resource": "arn:aws:ec2:ap-southeast-1:<account-id>:instance/<instance-id>"
         },
         {
             "Effect": "Allow",
-            "Action": [
-                "rds:StartDBInstance",
-                "rds:StopDBInstance",
-                "rds:DescribeDBInstances"
-            ],
+            "Action": ["rds:StartDBInstance", "rds:StopDBInstance", "rds:DescribeDBInstances"],
             "Resource": "arn:aws:rds:ap-southeast-1:<account-id>:db:<db-instance-id>"
         },
         {
             "Effect": "Allow",
-            "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents"
-            ],
+            "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
             "Resource": "arn:aws:logs:*:*:*"
         }
     ]
 }
 ```
 
-This role grants Lambda permission to start and stop a specific EC2 instance and RDS database instance, while also allowing it to write execution logs to CloudWatch Logs.
-
-## 5.2. Lambda function
+## 5.2. Lambda Function
 
 ```python
 import boto3
@@ -78,16 +63,23 @@ def lambda_handler(event, context):
     return {'status': 'no action specified'}
 ```
 
-A key configuration change is increasing the Lambda **Timeout** from the default **3 seconds** to **30 seconds**.
+**Important**: Increase the default Timeout from 3 seconds to 30 seconds (**Configuration → General configuration**) — calling two consecutive AWS APIs typically takes more than 3 seconds.
 
-Because the function invokes both the EC2 and RDS APIs sequentially, the combined execution time often exceeds the default timeout.
+## 5.3. EventBridge Scheduler — 4 Schedules
 
-Configuration path:
+| Schedule | Time (VN, UTC+7) | Cron | Input |
+|---|---|---|---|
+| `plantify-start-morning` | 08:00 | `0 8 * * ? *` | `{"action": "start"}` |
+| `plantify-stop-evening` | 17:30 | `30 17 * * ? *` | `{"action": "stop"}` |
+| `plantify-start-night` | 20:00 | `0 20 * * ? *` | `{"action": "start"}` |
+| `plantify-stop-midnight` | 00:00 | `0 0 * * ? *` | `{"action": "stop"}` |
 
-**Lambda → Configuration → General configuration → Timeout**
+For each schedule: Target = AWS Lambda Invoke → Select function → Input = Constant JSON text as specified in the table above.
 
-## 5.3. EventBridge Scheduler
+## Common Issues
 
-Four schedules were created to automatically start and stop the application infrastructure during working hours.
-
-<Table columnSizing=
+| Issue | Cause | Solution |
+|---|---|---|
+| `Sandbox.Timedout` when testing Lambda | The default 3-second timeout is too short | Increase to 30 seconds under General configuration |
+| Schedules execute at unexpected times | Confusion between UTC and local time — the Timezone field in EventBridge Scheduler defaults to local time (UTC+07:00), so manual UTC conversion is unnecessary | Check the Timezone field before setting up cron expressions and enter local time directly in the UI |
+| Calling `stop` when resources are already off throws an error | The RDS API is not idempotent like EC2 — throwing `InvalidDBInstanceStateFault` if called on an already stopped state | Wrap in a `try/except` block to catch and ignore this exception, preventing script failure |
