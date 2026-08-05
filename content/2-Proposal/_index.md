@@ -11,105 +11,95 @@ pre: " <b> 2. </b> "
 
 In this section, you need to summarize the contents of the workshop that you **plan** to conduct.
 
-# IoT Weather Platform for Lab Research
-## A Unified AWS Serverless Solution for Real-Time Weather Monitoring
+# Plantify Co — A Secure, Self-Hosted E-Commerce Platform on AWS
+## Deploying a PHP Plant Shop with Federated Login, Automated Backups, and Monitoring
 
 ### 1. Executive Summary
-The IoT Weather Platform is designed for the ITea Lab team in Ho Chi Minh City to enhance weather data collection and analysis. It supports up to 5 weather stations, with potential scalability to 10-15, utilizing Raspberry Pi edge devices with ESP32 sensors to transmit data via MQTT. The platform leverages AWS Serverless services to deliver real-time monitoring, predictive analytics, and cost efficiency, with access restricted to 5 lab members via Amazon Cognito.
+Plantify Co is a plant e-commerce and community website for green-lovers, built on a custom PHP MVC application (PDO + MySQL) that already existed as a codebase. The goal of this internship project is not to build the application from scratch, but to take it from "code on a laptop" to a **properly operated cloud service**: hosted on EC2, backed by a managed RDS database, protected by IAM least-privilege roles, backed up automatically to S3, monitored with CloudWatch alarms, and secured with federated login (Amazon Cognito + Google OAuth) plus TOTP two-factor authentication for admin accounts. The result is a small but realistically production-shaped deployment — the kind of stack a small business would actually run — built and operated end-to-end by a single intern within an 8-week window.
 
 ### 2. Problem Statement
-### What’s the Problem?
-Current weather stations require manual data collection, becoming unmanageable with multiple units. There is no centralized system for real-time data or analytics, and third-party platforms are costly and overly complex.
+### What's the Problem?
+The Plantify application originally ran only as local PHP code with no cloud infrastructure: no managed database, no automated backups, no monitoring, and a login system limited to a plain username/password form with no second factor — meaning a single leaked admin password could compromise the whole store. There was also no repeatable, documented way to deploy or recover the system if a server was lost.
 
 ### The Solution
-The platform uses AWS IoT Core to ingest MQTT data, AWS Lambda and API Gateway for processing, Amazon S3 for storage (including a data lake), and AWS Glue Crawlers and ETL jobs to extract, transform, and load data from the S3 data lake to another S3 bucket for analysis. AWS Amplify with Next.js provides the web interface, and Amazon Cognito ensures secure access. Similar to Thingsboard and CoreIoT, users can register new devices and manage connections, though this platform operates on a smaller scale and is designed for private use. Key features include real-time dashboards, trend analysis, and low operational costs.
+Move the application onto a minimal but real AWS architecture: **EC2** hosts the PHP app behind a DuckDNS domain, **RDS (MySQL)** replaces the local database, **IAM roles** (not static access keys) grant the EC2 instance only the permissions it needs, **S3** stores automated daily database backups triggered by a cron job, and **CloudWatch + SNS** raise alarms on abnormal CPU usage, low RDS free storage, and connection spikes. On top of this, authentication is upgraded from a plain login form to **Amazon Cognito with Google as a federated identity provider**, and admin accounts are additionally protected by **TOTP-based two-factor authentication**, so a compromised Google password alone is not enough to reach the admin dashboard.
 
 ### Benefits and Return on Investment
-The solution establishes a foundational resource for lab members to develop a larger IoT platform, serving as a study resource, and provides a data foundation for AI enthusiasts for model training or analysis. It reduces manual reporting for each station via a centralized platform, simplifying management and maintenance, and improves data reliability. Monthly costs are $0.66 USD per the AWS Pricing Calculator, with a 12-month total of $7.92 USD. All IoT equipment costs are covered by the existing weather station setup, eliminating additional development expenses. The break-even period of 6-12 months is achieved through significant time savings from reduced manual work.
+This project gives a working reference architecture for deploying a real PHP/MySQL application on AWS the "right way" — least-privilege IAM, automated backups, monitoring with alerting, and layered authentication — instead of the common shortcut of a single unmonitored VPS with root SSH access and a static password. It reduces operational risk (no more "did the backup actually run?" uncertainty), reduces the blast radius of a leaked password via 2FA, and produces a documented, repeatable deployment that can be rebuilt if the instance is lost. Running costs are kept to AWS Free-Tier-eligible or near-zero services (t-class EC2, small RDS instance, a handful of CloudWatch alarms, S3 storage in the tens of KB per backup), making this sustainable to keep running after the internship ends.
 
 ### 3. Solution Architecture
-The platform employs a serverless AWS architecture to manage data from 5 Raspberry Pi-based stations, scalable to 15. Data is ingested via AWS IoT Core, stored in an S3 data lake, and processed by AWS Glue Crawlers and ETL jobs to transform and load it into another S3 bucket for analysis. Lambda and API Gateway handle additional processing, while Amplify with Next.js hosts the dashboard, secured by Cognito. The architecture is detailed below:
-
-![IoT Weather Station Architecture](/images/2-Proposal/edge_architecture.jpeg)
-
-![IoT Weather Platform Architecture](/images/2-Proposal/platform_architecture.jpeg)
+The platform runs on a straightforward AWS stack: end users reach the PHP application on an EC2 instance via a DuckDNS domain; the application reads and writes to a MySQL database on RDS; a cron job on EC2 performs a `mysqldump` (with `--single-transaction` for a consistent snapshot) and uploads the result to S3 using an IAM role attached to the instance (no embedded access keys); CloudWatch collects EC2 and RDS metrics and, through an SNS topic, emails the team when CPU usage, RDS storage, or RDS connections cross defined thresholds. Authentication for both members and admins is handled by Amazon Cognito's Hosted UI, federating to Google as the identity provider; admin accounts pass through an additional TOTP verification step before a privileged session is granted.
 
 ### AWS Services Used
-- **AWS IoT Core**: Ingests MQTT data from 5 stations, scalable to 15.
-- **AWS Lambda**: Processes data and triggers Glue jobs (two functions).
-- **Amazon API Gateway**: Facilitates web app communication.
-- **Amazon S3**: Stores raw data in a data lake and processed outputs (two buckets).
-- **AWS Glue**: Crawlers catalog data, and ETL jobs transform and load it.
-- **AWS Amplify**: Hosts the Next.js web interface.
-- **Amazon Cognito**: Secures access for lab users.
+- **Amazon EC2**: Hosts the PHP MVC application (Plantify Co) and the backup cron job.
+- **Amazon RDS (MySQL)**: Managed relational database for products, orders, users, comments, news, and FAQ content.
+- **Amazon S3**: Stores automated, timestamped daily database backups.
+- **AWS IAM**: Provides a least-privilege role attached to EC2 (no static access keys) for S3 access.
+- **Amazon CloudWatch + Amazon SNS**: Monitors EC2 CPU, RDS free storage, and RDS connection count; sends email alarms.
+- **Amazon Cognito**: Hosted authentication and session/token handling, federated with Google OAuth.
+- **Google Cloud OAuth Client**: Identity provider for "Sign in with Google."
 
 ### Component Design
-- **Edge Devices**: Raspberry Pi collects and filters sensor data, sending it to IoT Core.
-- **Data Ingestion**: AWS IoT Core receives MQTT messages from the edge devices.
-- **Data Storage**: Raw data is stored in an S3 data lake; processed data is stored in another S3 bucket.
-- **Data Processing**: AWS Glue Crawlers catalog the data, and ETL jobs transform it for analysis.
-- **Web Interface**: AWS Amplify hosts a Next.js app for real-time dashboards and analytics.
-- **User Management**: Amazon Cognito manages user access, allowing up to 5 active accounts.
+- **Web Application (EC2)**: Custom PHP MVC app — Controllers, Core (Auth middleware, PDO Database singleton, Env loader, Helpers), Models, and Views — serving the storefront, member dashboard, and admin panel.
+- **Database (RDS)**: Stores products, orders (created via SQL transactions after re-validating prices server-side), users, comments (with pending/approved/hidden moderation states), news, FAQ, and site content.
+- **Backup Pipeline (EC2 → IAM → S3)**: A scheduled cron job (`0 2 * * *`) runs `mysqldump --single-transaction`, saves a timestamped `.sql` file, and uploads it to S3 through the instance's IAM role.
+- **Monitoring (CloudWatch → SNS)**: Alarms on `CPUUtilization` (EC2), `FreeStorageSpace` and `DatabaseConnections` (RDS) notify the team by email via an SNS topic.
+- **Authentication (Cognito ↔ Google ↔ EC2)**: Browser redirects through Cognito Hosted UI to Google for login; Cognito exchanges the authorization code for tokens server-to-server; the PHP app verifies the JWT, reads the user's group, and — for Admins only — requires a TOTP code (secret stored in RDS, independent of the Google account) before granting a privileged session.
 
 ### 4. Technical Implementation
 **Implementation Phases**
-This project has two parts—setting up weather edge stations and building the weather platform—each following 4 phases:
-- Build Theory and Draw Architecture: Research Raspberry Pi setup with ESP32 sensors and design the AWS serverless architecture (1 month pre-internship)
-- Calculate Price and Check Practicality: Use AWS Pricing Calculator to estimate costs and adjust if needed (Month 1).
-- Fix Architecture for Cost or Solution Fit: Tweak the design (e.g., optimize Lambda with Next.js) to stay cost-effective and usable (Month 2).
-- Develop, Test, and Deploy: Code the Raspberry Pi setup, AWS services with CDK/SDK, and Next.js app, then test and release to production (Months 2-3).
+The project follows four phases across the internship:
+- Review the existing Plantify PHP/MySQL codebase and design the target AWS architecture (research phase, Week 1–2).
+- Provision core infrastructure — EC2, RDS, IAM roles, DuckDNS domain — and get the application running in the cloud for the first time (Week 3–5).
+- Layer on operational and security features — S3 automated backups with cron, CloudWatch alarms with SNS notifications, and Cognito + Google + TOTP authentication (Week 5–6).
+- Debug, harden, and document — resolve real integration issues (OAuth scope errors, missing identity providers, SQL binding bugs), then write up the architecture and deployment guide (Week 7–8).
 
 **Technical Requirements**
-- Weather Edge Station: Sensors (temperature, humidity, rainfall, wind speed), a microcontroller (ESP32), and a Raspberry Pi as the edge device. Raspberry Pi runs Raspbian, handles Docker for filtering, and sends 1 MB/day per station via MQTT over Wi-Fi.
-- Weather Platform: Practical knowledge of AWS Amplify (hosting Next.js), Lambda (minimal use due to Next.js), AWS Glue (ETL), S3 (two buckets), IoT Core (gateway and rules), and Cognito (5 users). Use AWS CDK/SDK to code interactions (e.g., IoT Core rules to S3). Next.js reduces Lambda workload for the fullstack web app.
+- **Application layer**: PHP 8.x with `pdo_mysql`, `fileinfo`, and `mbstring` extensions; MySQL/MariaDB; Apache with `mod_rewrite`.
+- **Infrastructure layer**: Practical use of EC2 (instance setup, security groups), RDS (endpoint configuration, storage sizing), S3 (bucket policy, IAM-role-based access instead of access keys), and CloudWatch/SNS (metric alarms, email subscriptions).
+- **Identity layer**: Cognito User Pool with a Google federated identity provider (correct `redirect_uri` and `SupportedIdentityProviders` configuration), plus a self-issued TOTP secret per admin user stored in RDS and verified server-side.
 
 ### 5. Timeline & Milestones
-**Project Timeline**
-- Pre-Internship (Month 0): 1 month for planning and old station review.
-- Internship (Months 1-3): 3 months.
-    - Month 1: Study AWS and upgrade hardware.
-    - Month 2: Design and adjust architecture.
-    - Month 3: Implement, test, and launch.
-- Post-Launch: Up to 1 year for research.
+**Project Timeline (8 weeks)**
+- Week 1–2: Research cloud fundamentals and review the existing Plantify codebase.
+- Week 3–4: Stand up EC2 and RDS; deploy the application for the first time; configure IAM and DuckDNS.
+- Week 5: Build the S3 backup pipeline and automate it with cron.
+- Week 6: Integrate Cognito, Google OAuth, and TOTP two-factor authentication for admins.
+- Week 7: Debug real-world integration issues (OAuth `invalid_scope`, missing identity provider, SQL bind errors) and configure CloudWatch alarms via SNS.
+- Week 8: Finalize documentation, architecture diagrams, and knowledge-sharing blog posts; deploy the Hugo report site.
 
 ### 6. Budget Estimation
-You can find the budget estimation on the [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=621f38b12a1ef026842ba2ddfe46ff936ed4ab01).  
-Or you can download the [Budget Estimation File](../attachments/budget_estimation.pdf).
+All services used are eligible for AWS Free Tier or run at near-zero cost at this project's scale (a single small EC2 instance, one small RDS instance, S3 storage in the tens of KB per daily backup, and a handful of CloudWatch alarms with SNS email notifications). No paid third-party services are required; Google OAuth client credentials and DuckDNS are free.
 
 ### Infrastructure Costs
-- AWS Services:
-    - AWS Lambda: $0.00/month (1,000 requests, 512 MB storage).
-    - S3 Standard: $0.15/month (6 GB, 2,100 requests, 1 GB scanned).
-    - Data Transfer: $0.02/month (1 GB inbound, 1 GB outbound).
-    - AWS Amplify: $0.35/month (256 MB, 500 ms requests).
-    - Amazon API Gateway: $0.01/month (2,000 requests).
-    - AWS Glue ETL Jobs: $0.02/month (2 DPUs).
-    - AWS Glue Crawlers: $0.07/month (1 crawler).
-    - MQTT (IoT Core): $0.08/month (5 devices, 45,000 messages).
-
-Total: $0.7/month, $8.40/12 months
-
-- Hardware: $265 one-time (Raspberry Pi 5 and sensors).
+- **EC2** (t-class instance): Free Tier eligible / minimal on-demand cost.
+- **RDS** (small MySQL instance): Free Tier eligible / minimal on-demand cost.
+- **S3**: Negligible — each backup file is tens of KB, stored daily.
+- **CloudWatch + SNS**: Free Tier covers the small number of alarms and email notifications used.
+- **Cognito**: Free for the small number of monthly active users in this project.
+- **Domain**: DuckDNS is free.
 
 ### 7. Risk Assessment
 #### Risk Matrix
-- Network Outages: Medium impact, medium probability.
-- Sensor Failures: High impact, low probability.
-- Cost Overruns: Medium impact, low probability.
+- Inconsistent database backups during active writes: Medium impact, medium probability (mitigated by `--single-transaction`).
+- Leaked admin credentials (e.g., Google account password): High impact, low-to-medium probability.
+- Missed or silent backup/monitoring failures: Medium impact, medium probability.
+- OAuth/identity-provider misconfiguration during setup: Low impact, high probability (expected during initial integration).
 
 #### Mitigation Strategies
-- Network: Local storage on Raspberry Pi with Docker.
-- Sensors: Regular checks and spares.
-- Cost: AWS budget alerts and optimization.
+- Backups: Use `mysqldump --single-transaction` for a consistent snapshot even while the app is live; automate via cron; log every run.
+- Credential leaks: Require TOTP two-factor authentication for all Admin accounts, independent of the Google password.
+- Silent failures: CloudWatch alarms with SNS email notifications for CPU, RDS storage, and RDS connections; log file for backup runs.
+- Configuration errors: Document exact Cognito App Client and Google OAuth Client settings (redirect URI, supported identity providers, scopes) to make the setup repeatable.
 
 #### Contingency Plans
-- Revert to manual methods if AWS fails.
-- Use CloudFormation for cost-related rollbacks.
+- If RDS storage runs low, scale storage or prune old data before it affects write availability.
+- If the EC2 instance is lost, redeploy from the documented setup steps and restore the latest S3 backup.
+- If Cognito/Google integration breaks, fall back temporarily to the application's local authentication path while re-configuring.
 
 ### 8. Expected Outcomes
-#### Technical Improvements: 
-Real-time data and analytics replace manual processes.  
-Scalable to 10-15 stations.
+#### Technical Improvements
+A previously local-only PHP application becomes a monitored, backed-up, IAM-secured cloud deployment with federated login and admin two-factor authentication — a realistic small-scale production setup rather than a bare VPS.
+
 #### Long-term Value
-1-year data foundation for AI research.  
-Reusable for future projects.
+A documented, repeatable AWS deployment pattern (EC2 + RDS + S3 backups + CloudWatch alarms + Cognito/Google/TOTP auth) that can be reused for future PHP or general web projects, plus a set of knowledge-sharing blog posts and an 8-week worklog documenting real issues encountered and resolved.

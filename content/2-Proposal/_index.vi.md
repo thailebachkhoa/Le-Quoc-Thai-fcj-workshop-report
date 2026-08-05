@@ -5,104 +5,104 @@ weight: 2
 chapter: false
 pre: " <b> 2. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+
 
 Tại phần này, bạn cần tóm tắt các nội dung trong workshop mà bạn **dự tính** sẽ làm.
 
-# IoT Weather Platform for Lab Research  
-## Giải pháp AWS Serverless hợp nhất cho giám sát thời tiết thời gian thực  
+# Plantify Co — Nền tảng thương mại điện tử được vận hành an toàn trên AWS
+## Triển khai website bán cây cảnh PHP với đăng nhập liên kết, sao lưu tự động và giám sát hệ thống
 
-### 1. Tóm tắt điều hành  
-IoT Weather Platform được thiết kế dành cho nhóm *ITea Lab* tại TP. Hồ Chí Minh nhằm nâng cao khả năng thu thập và phân tích dữ liệu thời tiết. Nền tảng hỗ trợ tối đa 5 trạm thời tiết, có khả năng mở rộng lên 10–15 trạm, sử dụng thiết bị biên Raspberry Pi kết hợp cảm biến ESP32 để truyền dữ liệu qua MQTT. Nền tảng tận dụng các dịch vụ AWS Serverless để cung cấp giám sát thời gian thực, phân tích dự đoán và tiết kiệm chi phí, với quyền truy cập giới hạn cho 5 thành viên phòng lab thông qua Amazon Cognito.  
+### 1. Tóm tắt 
 
-### 2. Tuyên bố vấn đề  
-*Vấn đề hiện tại*  
-Các trạm thời tiết hiện tại yêu cầu thu thập dữ liệu thủ công, khó quản lý khi có nhiều trạm. Không có hệ thống tập trung cho dữ liệu hoặc phân tích thời gian thực, và các nền tảng bên thứ ba thường tốn kém và quá phức tạp.  
+Plantify Co là website bán cây cảnh và cộng đồng cho người yêu cây xanh, xây dựng trên nền ứng dụng PHP MVC tự viết (PDO + MySQL) vốn đã có sẵn template qua các dự án cá nhân. 
 
-*Giải pháp*  
-Nền tảng sử dụng AWS IoT Core để tiếp nhận dữ liệu MQTT, AWS Lambda và API Gateway để xử lý, Amazon S3 để lưu trữ (bao gồm data lake), và AWS Glue Crawlers cùng các tác vụ ETL để trích xuất, chuyển đổi, tải dữ liệu từ S3 data lake sang một S3 bucket khác để phân tích. AWS Amplify với Next.js cung cấp giao diện web, và Amazon Cognito đảm bảo quyền truy cập an toàn. Tương tự như Thingsboard và CoreIoT, người dùng có thể đăng ký thiết bị mới và quản lý kết nối, nhưng nền tảng này hoạt động ở quy mô nhỏ hơn và phục vụ mục đích sử dụng nội bộ. Các tính năng chính bao gồm bảng điều khiển thời gian thực, phân tích xu hướng và chi phí vận hành thấp.  
+Mục tiêu của dự án thực tập không phải là xây dựng ứng dụng Cloud-Native ( dự án phải triển khai song hành với đẩy lên cloud ) mà là phát triển nhanh chóng dựa trên nền tảng mã nguồn mở (Framer Motion, srtdash, E-commerce UI Kit) và kiến trúc phần mềm có sẵn đưa nó từ trạng thái "code chạy trên máy cá nhân" thành một **dịch vụ cloud được vận hành đúng chuẩn**: chạy trên EC2, dùng RDS làm database quản lý, bảo vệ bằng IAM role theo nguyên tắc least-privilege, tự động sao lưu lên S3, giám sát bằng CloudWatch Alarm, và bảo mật đăng nhập bằng Amazon Cognito kết hợp Google OAuth cùng xác thực hai lớp TOTP dành riêng cho tài khoản admin. 
 
-*Lợi ích và hoàn vốn đầu tư (ROI)*  
-Giải pháp tạo nền tảng cơ bản để các thành viên phòng lab phát triển một nền tảng IoT lớn hơn, đồng thời cung cấp nguồn dữ liệu cho những người nghiên cứu AI phục vụ huấn luyện mô hình hoặc phân tích. Nền tảng giảm bớt báo cáo thủ công cho từng trạm thông qua hệ thống tập trung, đơn giản hóa quản lý và bảo trì, đồng thời cải thiện độ tin cậy dữ liệu. Chi phí hàng tháng ước tính 0,66 USD (theo AWS Pricing Calculator), tổng cộng 7,92 USD cho 12 tháng. Tất cả thiết bị IoT đã được trang bị từ hệ thống trạm thời tiết hiện tại, không phát sinh chi phí phát triển thêm. Thời gian hoàn vốn 6–12 tháng nhờ tiết kiệm đáng kể thời gian thao tác thủ công.  
+Kết quả là một hệ thống nhỏ nhưng có hình dáng thực tế của môi trường production — đúng kiểu hạ tầng mà một cửa hàng nhỏ thật sự sẽ vận hành — được xây dựng và triển khai thủ công trong khoảng thời gian 8 tuần.
 
-### 3. Kiến trúc giải pháp  
-Nền tảng áp dụng kiến trúc AWS Serverless để quản lý dữ liệu từ 5 trạm dựa trên Raspberry Pi, có thể mở rộng lên 15 trạm. Dữ liệu được tiếp nhận qua AWS IoT Core, lưu trữ trong S3 data lake và xử lý bởi AWS Glue Crawlers và ETL jobs để chuyển đổi và tải vào một S3 bucket khác cho mục đích phân tích. Lambda và API Gateway xử lý bổ sung, trong khi Amplify với Next.js cung cấp bảng điều khiển được bảo mật bởi Cognito.  
+### 2. Phân tích vấn đề
+*Vấn đề hiện tại*
+Ứng dụng Plantify ban đầu chỉ chạy như mã PHP cục bộ, không có hạ tầng cloud: không có database được quản lý, không sao lưu tự động, không giám sát, và hệ thống đăng nhập chỉ dừng ở form username/password thông thường, không có lớp xác thực thứ hai — nghĩa là chỉ cần lộ 1 mật khẩu admin là có thể chiếm toàn bộ cửa hàng. Ngoài ra, cũng không có quy trình triển khai hay khôi phục nào được ghi lại rõ ràng nếu server gặp sự cố.
 
-![IoT Weather Station Architecture](/images/2-Proposal/edge_architecture.jpeg)
+*Giải pháp*
+Đưa ứng dụng lên một kiến trúc AWS tối giản nhưng thực tế: **EC2** chạy ứng dụng PHP thông qua tên miền DuckDNS, **RDS (MySQL)** thay thế database cục bộ, **IAM role** (không dùng access key tĩnh) cấp cho EC2 đúng những quyền cần thiết, **S3** lưu bản sao lưu database hàng ngày được kích hoạt tự động qua cron, và **CloudWatch + SNS** cảnh báo khi CPU tăng bất thường, dung lượng trống RDS thấp, hoặc số kết nối RDS tăng đột biến. Bên cạnh đó, hệ thống đăng nhập được nâng cấp từ form thông thường lên **Amazon Cognito với Google làm nhà cung cấp danh tính liên kết (federated identity provider)**, và riêng tài khoản admin được bảo vệ thêm bằng **xác thực hai lớp TOTP**, để việc lộ mật khẩu Google một mình không đủ để truy cập bảng điều khiển admin.
 
-![IoT Weather Platform Architecture](/images/2-Proposal/platform_architecture.jpeg)
+*Lợi ích và hoàn vốn đầu tư*
+Dự án tạo ra một kiến trúc tham khảo thực tế cho việc triển khai ứng dụng PHP/MySQL lên AWS "đúng cách" — IAM least-privilege, sao lưu tự động, giám sát có cảnh báo, và xác thực nhiều lớp — thay vì lối tắt phổ biến là chạy trên 1 VPS không giám sát với SSH root và mật khẩu tĩnh. Nó giảm rủi ro vận hành (không còn phải băn khoăn "backup có chạy thật không?"), giảm mức độ ảnh hưởng khi mật khẩu bị lộ nhờ 2FA, và tạo ra một quy trình triển khai có tài liệu, có thể lặp lại nếu mất instance. Chi phí vận hành được giữ ở mức gần như miễn phí nhờ tận dụng AWS Free Tier (EC2 loại t, RDS instance nhỏ, vài CloudWatch alarm, dung lượng S3 chỉ vài chục KB mỗi bản backup), giúp hệ thống có thể duy trì lâu dài sau khi kỳ thực tập kết thúc.
 
-*Dịch vụ AWS sử dụng*  
-- *AWS IoT Core*: Tiếp nhận dữ liệu MQTT từ 5 trạm, mở rộng lên 15.  
-- *AWS Lambda*: Xử lý dữ liệu và kích hoạt Glue jobs (2 hàm).  
-- *Amazon API Gateway*: Giao tiếp với ứng dụng web.  
-- *Amazon S3*: Lưu trữ dữ liệu thô (data lake) và dữ liệu đã xử lý (2 bucket).  
-- *AWS Glue*: Crawlers lập chỉ mục dữ liệu, ETL jobs chuyển đổi và tải dữ liệu.  
-- *AWS Amplify*: Lưu trữ giao diện web Next.js.  
-- *Amazon Cognito*: Quản lý quyền truy cập cho người dùng phòng lab.  
+### 3. Kiến trúc giải pháp
+Nền tảng chạy trên một kiến trúc AWS đơn giản: người dùng truy cập ứng dụng PHP trên EC2 qua tên miền DuckDNS; ứng dụng đọc/ghi vào database MySQL trên RDS; một cron job trên EC2 thực hiện `mysqldump` (kèm `--single-transaction` để đảm bảo ảnh chụp dữ liệu nhất quán) rồi tải kết quả lên S3 thông qua IAM role gắn sẵn cho instance (không nhúng access key trong code); CloudWatch thu thập metric của EC2 và RDS, và thông qua một SNS topic, gửi email cảnh báo cho nhóm khi CPU, dung lượng RDS, hoặc số kết nối RDS vượt ngưỡng đã đặt. Việc xác thực cho cả thành viên và admin được xử lý qua Cognito Hosted UI, liên kết với Google làm identity provider; riêng tài khoản admin phải đi qua thêm một bước xác minh TOTP trước khi được cấp phiên đăng nhập có quyền cao.
 
-*Thiết kế thành phần*  
-- *Thiết bị biên*: Raspberry Pi thu thập và lọc dữ liệu cảm biến, gửi tới IoT Core.  
-- *Tiếp nhận dữ liệu*: AWS IoT Core nhận tin nhắn MQTT từ thiết bị biên.  
-- *Lưu trữ dữ liệu*: Dữ liệu thô lưu trong S3 data lake; dữ liệu đã xử lý lưu ở một S3 bucket khác.  
-- *Xử lý dữ liệu*: AWS Glue Crawlers lập chỉ mục dữ liệu; ETL jobs chuyển đổi để phân tích.  
-- *Giao diện web*: AWS Amplify lưu trữ ứng dụng Next.js cho bảng điều khiển và phân tích thời gian thực.  
-- *Quản lý người dùng*: Amazon Cognito giới hạn 5 tài khoản hoạt động.  
+### Dịch vụ AWS sử dụng
+- **Amazon EC2**: Chạy ứng dụng PHP MVC (Plantify Co) và cron job sao lưu.
+- **Amazon RDS (MySQL)**: Database quan hệ được quản lý, lưu sản phẩm, đơn hàng, người dùng, bình luận, tin tức và nội dung FAQ.
+- **Amazon S3**: Lưu bản sao lưu database hàng ngày, có gắn timestamp, được tạo tự động.
+- **AWS IAM**: Cung cấp role theo nguyên tắc least-privilege gắn cho EC2 (không dùng access key tĩnh) để truy cập S3.
+- **Amazon CloudWatch + Amazon SNS**: Giám sát CPU của EC2, dung lượng trống và số kết nối của RDS; gửi cảnh báo qua email.
+- **Amazon Cognito**: Xử lý xác thực và phiên đăng nhập/token, liên kết với Google OAuth.
+- **Google Cloud OAuth Client**: Nhà cung cấp danh tính cho tính năng "Đăng nhập bằng Google".
 
-### 4. Triển khai kỹ thuật  
-*Các giai đoạn triển khai*  
-Dự án gồm 2 phần — thiết lập trạm thời tiết biên và xây dựng nền tảng thời tiết — mỗi phần trải qua 4 giai đoạn:  
-1. *Nghiên cứu và vẽ kiến trúc*: Nghiên cứu Raspberry Pi với cảm biến ESP32 và thiết kế kiến trúc AWS Serverless (1 tháng trước kỳ thực tập).  
-2. *Tính toán chi phí và kiểm tra tính khả thi*: Sử dụng AWS Pricing Calculator để ước tính và điều chỉnh (Tháng 1).  
-3. *Điều chỉnh kiến trúc để tối ưu chi phí/giải pháp*: Tinh chỉnh (ví dụ tối ưu Lambda với Next.js) để đảm bảo hiệu quả (Tháng 2).  
-4. *Phát triển, kiểm thử, triển khai*: Lập trình Raspberry Pi, AWS services với CDK/SDK và ứng dụng Next.js, sau đó kiểm thử và đưa vào vận hành (Tháng 2–3).  
+### Thiết kế thành phần
+- **Ứng dụng web (EC2)**: Ứng dụng PHP MVC tự viết — gồm Controllers, Core (middleware Auth, PDO Database singleton, đọc Env, Helpers), Models và Views — phục vụ trang bán hàng, dashboard thành viên và bảng admin.
+- **Database (RDS)**: Lưu sản phẩm, đơn hàng (được tạo qua transaction SQL sau khi kiểm tra lại giá ở server), người dùng, bình luận (có trạng thái kiểm duyệt pending/approved/hidden), tin tức, FAQ và nội dung trang.
+- **Pipeline sao lưu (EC2 → IAM → S3)**: Cron job theo lịch (`0 2 * * *`) chạy `mysqldump --single-transaction`, lưu file `.sql` có timestamp, rồi tải lên S3 thông qua IAM role của instance.
+- **Giám sát (CloudWatch → SNS)**: Alarm trên `CPUUtilization` (EC2), `FreeStorageSpace` và `DatabaseConnections` (RDS) gửi thông báo qua email tới nhóm bằng SNS topic.
+- **Xác thực (Cognito ↔ Google ↔ EC2)**: Trình duyệt được chuyển hướng qua Cognito Hosted UI sang Google để đăng nhập; Cognito đổi authorization code lấy token ở phía server; ứng dụng PHP xác minh JWT, đọc nhóm người dùng, và — chỉ với Admin — yêu cầu thêm mã TOTP (secret lưu trong RDS, độc lập với tài khoản Google) trước khi cấp phiên đăng nhập có quyền cao.
 
-*Yêu cầu kỹ thuật*  
-- *Trạm thời tiết biên*: Cảm biến (nhiệt độ, độ ẩm, lượng mưa, tốc độ gió), vi điều khiển ESP32, Raspberry Pi làm thiết bị biên. Raspberry Pi chạy Raspbian, sử dụng Docker để lọc dữ liệu và gửi 1 MB/ngày/trạm qua MQTT qua Wi-Fi.  
-- *Nền tảng thời tiết*: Kiến thức thực tế về AWS Amplify (lưu trữ Next.js), Lambda (giảm thiểu do Next.js xử lý), AWS Glue (ETL), S3 (2 bucket), IoT Core (gateway và rules), và Cognito (5 người dùng). Sử dụng AWS CDK/SDK để lập trình (ví dụ IoT Core rules tới S3). Next.js giúp giảm tải Lambda cho ứng dụng web fullstack.  
+### 4. Triển khai kỹ thuật
+*Các giai đoạn triển khai*
+Dự án trải qua 4 giai đoạn trong suốt kỳ thực tập:
+- Rà soát mã nguồn PHP/MySQL sẵn có của Plantify và thiết kế kiến trúc AWS mục tiêu (giai đoạn nghiên cứu, Tuần 1–2).
+- Dựng hạ tầng lõi — EC2, RDS, IAM role, tên miền DuckDNS — và đưa ứng dụng chạy trên cloud lần đầu tiên (Tuần 3–5).
+- Bổ sung các tính năng vận hành và bảo mật — sao lưu tự động S3 qua cron, CloudWatch alarm với thông báo SNS, và xác thực Cognito + Google + TOTP (Tuần 5–6).
+- Debug, gia cố và viết tài liệu — xử lý các sự cố tích hợp thật (lỗi OAuth scope, thiếu identity provider, bug SQL binding), sau đó viết tài liệu kiến trúc và hướng dẫn triển khai (Tuần 7–8).
 
-### 5. Lộ trình & Mốc triển khai  
-- *Trước thực tập (Tháng 0)*: 1 tháng lên kế hoạch và đánh giá trạm cũ.  
-- *Thực tập (Tháng 1–3)*:  
-    - Tháng 1: Học AWS và nâng cấp phần cứng.  
-    - Tháng 2: Thiết kế và điều chỉnh kiến trúc.  
-    - Tháng 3: Triển khai, kiểm thử, đưa vào sử dụng.  
-- *Sau triển khai*: Nghiên cứu thêm trong vòng 1 năm.  
+*Yêu cầu kỹ thuật*
+- **Tầng ứng dụng**: PHP 8.x với các extension `pdo_mysql`, `fileinfo`, `mbstring`; MySQL/MariaDB; Apache có `mod_rewrite`.
+- **Tầng hạ tầng**: Sử dụng thực tế EC2 (cấu hình instance, security group), RDS (cấu hình endpoint, dung lượng lưu trữ), S3 (bucket policy, truy cập qua IAM role thay vì access key), và CloudWatch/SNS (metric alarm, đăng ký nhận email).
+- **Tầng danh tính**: Cognito User Pool với Google làm federated identity provider (cấu hình đúng `redirect_uri` và `SupportedIdentityProviders`), cùng secret TOTP tự sinh cho từng admin, lưu trong RDS và xác minh ở phía server.
 
-### 6. Ước tính ngân sách  
-Có thể xem chi phí trên [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=621f38b12a1ef026842ba2ddfe46ff936ed4ab01)  
-Hoặc tải [tệp ước tính ngân sách](../attachments/budget_estimation.pdf).  
+### 5. Lộ trình & Mốc triển khai
+*Lộ trình dự án (8 tuần)*
+- Tuần 1–2: Nghiên cứu nền tảng cloud và rà soát mã nguồn Plantify sẵn có.
+- Tuần 3–4: Dựng EC2 và RDS; triển khai ứng dụng lần đầu; cấu hình IAM và DuckDNS.
+- Tuần 5: Xây dựng pipeline sao lưu S3 và tự động hóa bằng cron.
+- Tuần 6: Tích hợp Cognito, Google OAuth và xác thực hai lớp TOTP cho admin.
+- Tuần 7: Debug các sự cố tích hợp thực tế (lỗi OAuth `invalid_scope`, thiếu identity provider, lỗi SQL bind) và cấu hình CloudWatch alarm qua SNS.
+- Tuần 8: Hoàn thiện tài liệu, sơ đồ kiến trúc, viết blog chia sẻ kiến thức và triển khai trang báo cáo Hugo.
 
-*Chi phí hạ tầng*  
-- AWS Lambda: 0,00 USD/tháng (1.000 request, 512 MB lưu trữ).  
-- S3 Standard: 0,15 USD/tháng (6 GB, 2.100 request, 1 GB quét).  
-- Truyền dữ liệu: 0,02 USD/tháng (1 GB vào, 1 GB ra).  
-- AWS Amplify: 0,35 USD/tháng (256 MB, request 500 ms).  
-- Amazon API Gateway: 0,01 USD/tháng (2.000 request).  
-- AWS Glue ETL Jobs: 0,02 USD/tháng (2 DPU).  
-- AWS Glue Crawlers: 0,07 USD/tháng (1 crawler).  
-- MQTT (IoT Core): 0,08 USD/tháng (5 thiết bị, 45.000 tin nhắn).  
+### 6. Ước tính ngân sách
+Tất cả dịch vụ sử dụng đều nằm trong AWS Free Tier hoặc chi phí gần như bằng 0 ở quy mô của dự án này (1 EC2 instance nhỏ, 1 RDS instance nhỏ, dung lượng S3 chỉ vài chục KB mỗi bản backup hàng ngày, và vài CloudWatch alarm kèm thông báo SNS qua email). Không cần dịch vụ bên thứ ba trả phí nào; Google OAuth client và DuckDNS đều miễn phí.
 
-*Tổng*: 0,7 USD/tháng, 8,40 USD/12 tháng  
-- *Phần cứng*: 265 USD một lần (Raspberry Pi 5 và cảm biến).  
+*Chi phí hạ tầng*
+- **EC2** (loại t): Nằm trong Free Tier / chi phí on-demand tối thiểu.
+- **RDS** (MySQL instance nhỏ): Nằm trong Free Tier / chi phí on-demand tối thiểu.
+- **S3**: Không đáng kể — mỗi file backup chỉ vài chục KB, lưu hàng ngày.
+- **CloudWatch + SNS**: Free Tier đủ cho số lượng alarm và thông báo email nhỏ trong dự án này.
+- **Cognito**: Miễn phí với số lượng người dùng hoạt động hàng tháng ít của dự án.
+- **Tên miền**: DuckDNS miễn phí.
 
-### 7. Đánh giá rủi ro  
-*Ma trận rủi ro*  
-- Mất mạng: Ảnh hưởng trung bình, xác suất trung bình.  
-- Hỏng cảm biến: Ảnh hưởng cao, xác suất thấp.  
-- Vượt ngân sách: Ảnh hưởng trung bình, xác suất thấp.  
+### 7. Đánh giá rủi ro
+*Ma trận rủi ro*
+- Backup database không nhất quán khi đang có ghi dữ liệu: Ảnh hưởng trung bình, xác suất trung bình (đã giảm thiểu bằng `--single-transaction`).
+- Lộ thông tin đăng nhập admin (ví dụ mật khẩu tài khoản Google): Ảnh hưởng cao, xác suất thấp–trung bình.
+- Backup/giám sát lỗi âm thầm mà không ai biết: Ảnh hưởng trung bình, xác suất trung bình.
+- Cấu hình sai OAuth/identity provider trong quá trình thiết lập: Ảnh hưởng thấp, xác suất cao (thường gặp khi mới tích hợp).
 
-*Chiến lược giảm thiểu*  
-- Mạng: Lưu trữ cục bộ trên Raspberry Pi với Docker.  
-- Cảm biến: Kiểm tra định kỳ, dự phòng linh kiện.  
-- Chi phí: Cảnh báo ngân sách AWS, tối ưu dịch vụ.  
+*Chiến lược giảm thiểu*
+- Backup: Dùng `mysqldump --single-transaction` để có ảnh chụp nhất quán ngay cả khi ứng dụng đang chạy; tự động hóa bằng cron; ghi log mỗi lần chạy.
+- Lộ thông tin đăng nhập: Yêu cầu xác thực hai lớp TOTP cho mọi tài khoản Admin, độc lập với mật khẩu Google.
+- Lỗi âm thầm: CloudWatch alarm kèm thông báo email qua SNS cho CPU, dung lượng RDS và số kết nối RDS; ghi log cho mỗi lần backup.
+- Lỗi cấu hình: Ghi lại chính xác cấu hình Cognito App Client và Google OAuth Client (redirect URI, identity provider được hỗ trợ, scope) để việc thiết lập có thể lặp lại được.
 
-*Kế hoạch dự phòng*  
-- Quay lại thu thập thủ công nếu AWS gặp sự cố.  
-- Sử dụng CloudFormation để khôi phục cấu hình liên quan đến chi phí.  
+*Kế hoạch dự phòng*
+- Nếu dung lượng RDS sắp hết, mở rộng dung lượng hoặc dọn dữ liệu cũ trước khi ảnh hưởng đến khả năng ghi dữ liệu.
+- Nếu mất EC2 instance, triển khai lại theo đúng các bước đã ghi tài liệu và khôi phục bản backup S3 mới nhất.
+- Nếu tích hợp Cognito/Google gặp sự cố, tạm thời quay về luồng xác thực nội bộ của ứng dụng trong lúc cấu hình lại.
 
-### 8. Kết quả kỳ vọng  
-*Cải tiến kỹ thuật*: Dữ liệu và phân tích thời gian thực thay thế quy trình thủ công. Có thể mở rộng tới 10–15 trạm.  
-*Giá trị dài hạn*: Nền tảng dữ liệu 1 năm cho nghiên cứu AI, có thể tái sử dụng cho các dự án tương lai.
+### 8. Kết quả kỳ vọng
+*Cải tiến kỹ thuật*
+Một ứng dụng PHP trước đây chỉ chạy cục bộ trở thành một hệ thống cloud được giám sát, sao lưu tự động, bảo mật bằng IAM, có đăng nhập liên kết và xác thực hai lớp cho admin — một môi trường production quy mô nhỏ thực tế thay vì chỉ là một VPS trần trụi.
+
+*Giá trị dài hạn*
+Một mô hình triển khai AWS có tài liệu, có thể lặp lại (EC2 + RDS + backup S3 + CloudWatch alarm + xác thực Cognito/Google/TOTP) có thể tái sử dụng cho các dự án PHP hoặc web khác trong tương lai, cùng với các bài blog chia sẻ kiến thức và worklog 8 tuần ghi lại những sự cố thực tế đã gặp và cách xử lý.
