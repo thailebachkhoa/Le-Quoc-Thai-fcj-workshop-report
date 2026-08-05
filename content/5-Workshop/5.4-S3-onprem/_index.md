@@ -1,20 +1,43 @@
 ---
-title : "Access S3 from on-premises"
-date : 2024-01-01
-weight : 4
-chapter : false
-pre : " <b> 5.4. </b> "
----
 
-#### Overview
+title: "4. Domain, HTTPS, and Elastic IP"
+weight: 4
+date: 2026-08-05
+draft: false
+------------
 
-+ In this section, you will create an Interface endpoint to access Amazon S3 from a simulated on-premises environment. The Interface endpoint will allow you to route to Amazon S3 over a VPN connection from your simulated on-premises environment.
+## 4.1. Assigning an Elastic IP
 
-+ Why using **Interface endpoint**: 
-    + Gateway endpoints only work with resources running in the VPC where they are created. Interface endpoints work with resources running in VPC, and also resources running in on-premises environments. Connectivty from your on-premises environment to the cloud can be provided by AWS Site-to-Site VPN or AWS Direct Connect.
-    + Interface endpoints allow you to connect to services powered by AWS PrivateLink. These services include some AWS services, services hosted by other AWS customers and partners in their own VPCs (referred to as PrivateLink Endpoint Services), and supported AWS Marketplace Partner services. For this workshop, we will focus on connecting to Amazon S3.
+An EC2 instance’s default public IP address changes every time the instance is stopped and started, which becomes inconvenient because SSH configurations and DNS records must be updated repeatedly.
 
-![Interface endpoint architecture](/images/5-Workshop/5.4-S3-onprem/diagram3.png)
+To assign a permanent public IP address:
 
+**EC2 → Network & Security → Elastic IPs → Allocate Elastic IP address**
 
+Then:
 
+**Actions → Associate Elastic IP address**
+
+Select the correct EC2 instance.
+
+Using an Elastic IP ensures that the server remains reachable through the same IP address even after a restart.
+
+> **Cost note:** Since **February 1, 2024**, AWS charges for all public IPv4 addresses (approximately **$0.005/hour**), including Elastic IPs attached to running instances. The EC2 Free Tier includes **750 hours of public IPv4 usage per month during the first 12 months**, which is sufficient if you use only a single Elastic IP.
+
+## 4.2. Configuring a free domain with DuckDNS
+
+Register a free subdomain at **duckdns.org** and point it to the Elastic IP created in the previous step.
+
+After the DNS record has propagated, update the Apache Virtual Host configuration so that the `ServerName` matches the new domain.
+
+Example:
+
+```apache
+ServerName your-subdomain.duckdns.org
+```
+
+## 4.3. Enabling HTTPS with Let’s Encrypt
+
+Install Certbot and the Apache integration:
+
+<CodeBlock language=

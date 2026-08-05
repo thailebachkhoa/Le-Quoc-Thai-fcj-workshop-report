@@ -1,9 +1,9 @@
 ---
-title: "Workshop: Xây dựng và triển khai Plantify Co trên AWS"
-weight: 26
-date: 2026-08-05
-draft: false
-description: "Toàn bộ quy trình triển khai một ứng dụng web PHP thực tế lên AWS: EC2, RDS, S3, IAM, CloudWatch, Lambda, EventBridge, Cognito, kèm các lỗi thật đã gặp và cách xử lý."
+title: "Workshop"
+date: 2024-01-01
+weight: 5
+chapter: false
+pre: " <b> 5. </b> "
 ---
 
 ## Overview
@@ -20,10 +20,6 @@ Mục tiêu của workshop:
 Toàn bộ mã nguồn: [github.com/thailebachkhoa/FCAJ-Intern-Project](https://github.com/thailebachkhoa/FCAJ-Intern-Project)
 
 Website demo: chạy qua domain DuckDNS, HTTPS bật qua Let's Encrypt.
-https://i-love-fcaj.duckdns.org/faq
-
-Video Demo: https://drive.google.com/drive/folders/1h2YFHT7YLl9_Y-XRBVLqYCZcQ-CJM9o7?usp=drive_link
-
 
 ## Prerequisite
 

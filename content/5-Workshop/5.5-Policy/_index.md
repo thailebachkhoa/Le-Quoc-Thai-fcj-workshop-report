@@ -1,99 +1,93 @@
 ---
-title : "VPC Endpoint Policies"
-date : 2024-01-01
-weight : 5
-chapter : false
-pre : " <b> 5.5. </b> "
----
 
-When you create an interface or gateway endpoint, you can attach an endpoint policy to it that controls access to the service to which you are connecting. A VPC endpoint policy is an IAM resource policy that you attach to an endpoint. If you do not attach a policy when you create an endpoint, AWS attaches a default policy for you that allows full access to the service through the endpoint.
+title: "5. Automating cost optimization with Lambda and EventBridge"
+weight: 5
+date: 2026-08-05
+draft: false
+------------
 
-You can create a policy that restricts access to specific S3 buckets only. This is useful if you only want certain S3 Buckets to be accessible through the endpoint.
+## 5.1. IAM role for Lambda
 
-In this section you will create a VPC endpoint policy that restricts access to the S3 bucket specified in the VPC endpoint policy.
-
-![endpoint diagram](/images/5-Workshop/5.5-Policy/s3-bucket-policy.png)
-
-#### Connect to an EC2 instance and verify connectivity to S3
-
-1. Start a new AWS Session Manager session on the instance named Test-Gateway-Endpoint. From the session, verify that you can list the contents of the bucket you created in Part 1: Access S3 from VPC:
-
-```
-aws s3 ls s3://\<your-bucket-name\>
-```
-![test](/images/5-Workshop/5.5-Policy/test1.png)
-
-The bucket contents include the two 1 GB files uploaded in earlier.
-
-2. Create a new S3 bucket; follow the naming pattern you used in Part 1, but add a '-2' to the name. Leave other fields as default and click create
-
-![create bucket](/images/5-Workshop/5.5-Policy/create-bucket.png)
-
-Successfully create bucket
-
-![Success](/images/5-Workshop/5.5-Policy/create-bucket-success.png)
-
-3. Navigate to: Services > VPC > Endpoints, then select the Gateway VPC endpoint you created earlier. Click the Policy tab. Click Edit policy.
-
-![policy](/images/5-Workshop/5.5-Policy/policy1.png)
-
-The default policy allows access to all S3 Buckets through the VPC endpoint.
-
-4. In Edit Policy console, copy & Paste the following policy, then replace yourbucketname-2 with your 2nd bucket name. This policy will allow access through the VPC endpoint to your new bucket, but not any other bucket in Amazon S3. Click Save to apply the policy.
-
-```
+```json
 {
-  "Id": "Policy1631305502445",
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "Stmt1631305501021",
-      "Action": "s3:*",
-      "Effect": "Allow",
-      "Resource": [
-      				"arn:aws:s3:::yourbucketname-2",
-       				"arn:aws:s3:::yourbucketname-2/*"
-       ],
-      "Principal": "*"
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:StartInstances",
+                "ec2:StopInstances",
+                "ec2:DescribeInstances"
+            ],
+            "Resource": "arn:aws:ec2:ap-southeast-1:<account-id>:instance/<instance-id>"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "rds:StartDBInstance",
+                "rds:StopDBInstance",
+                "rds:DescribeDBInstances"
+            ],
+            "Resource": "arn:aws:rds:ap-southeast-1:<account-id>:db:<db-instance-id>"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "arn:aws:logs:*:*:*"
+        }
+    ]
 }
 ```
 
-![custom policy](/images/5-Workshop/5.5-Policy/policy2.png)
+This role grants Lambda permission to start and stop a specific EC2 instance and RDS database instance, while also allowing it to write execution logs to CloudWatch Logs.
 
-Successfully customize policy
+## 5.2. Lambda function
 
-![success](/static/images/5-Workshop/5.5-Policy/success.png)
+```python
+import boto3
 
-5. From your session on the Test-Gateway-Endpoint instance, test access to the S3 bucket you created in Part 1: Access S3 from VPC
+EC2_INSTANCE_ID = '<instance-id>'
+RDS_INSTANCE_ID = '<db-instance-id>'
+REGION = 'ap-southeast-1'
+
+def lambda_handler(event, context):
+    action = event.get('action')
+    ec2 = boto3.client('ec2', region_name=REGION)
+    rds = boto3.client('rds', region_name=REGION)
+
+    if action == 'start':
+        ec2.start_instances(InstanceIds=[EC2_INSTANCE_ID])
+        try:
+            rds.start_db_instance(DBInstanceIdentifier=RDS_INSTANCE_ID)
+        except rds.exceptions.InvalidDBInstanceStateFault:
+            pass
+        return {'status': 'started'}
+
+    elif action == 'stop':
+        ec2.stop_instances(InstanceIds=[EC2_INSTANCE_ID])
+        try:
+            rds.stop_db_instance(DBInstanceIdentifier=RDS_INSTANCE_ID)
+        except rds.exceptions.InvalidDBInstanceStateFault:
+            pass
+        return {'status': 'stopped'}
+
+    return {'status': 'no action specified'}
 ```
-aws s3 ls s3://<yourbucketname>
-```
 
-This command will return an error because access to this bucket is not permitted by your new VPC endpoint policy:
+A key configuration change is increasing the Lambda **Timeout** from the default **3 seconds** to **30 seconds**.
 
-![error](/static/images/5-Workshop/5.5-Policy/error.png)
+Because the function invokes both the EC2 and RDS APIs sequentially, the combined execution time often exceeds the default timeout.
 
-6. Return to your home directory on your EC2 instance ` cd~ `
+Configuration path:
 
-+ Create a file ```fallocate -l 1G test-bucket2.xyz ```
-+ Copy file to 2nd bucket ```aws s3 cp test-bucket2.xyz s3://<your-2nd-bucket-name>```
+**Lambda → Configuration → General configuration → Timeout**
 
-![success](/static/images/5-Workshop/5.5-Policy/test2.png)
+## 5.3. EventBridge Scheduler
 
-This operation succeeds because it is permitted by the VPC endpoint policy.
+Four schedules were created to automatically start and stop the application infrastructure during working hours.
 
-![success](/static/images/5-Workshop/5.5-Policy/test2-success.png)
-
-+ Then we test access to the first bucket by copy the file to 1st bucket `aws s3 cp test-bucket2.xyz s3://<your-1st-bucket-name>`
-
-![fail](/static/images/5-Workshop/5.5-Policy/test2-fail.png)
-
-This command will return an error because access to this bucket is not permitted by your new VPC endpoint policy.
-
-#### Part 3 Summary:
-
-In this section, you created a VPC endpoint policy for Amazon S3, and used the AWS CLI to test the policy. AWS CLI actions targeted to your original S3 bucket failed because you applied a policy that only allowed access to the second bucket you created. AWS CLI actions targeted for your second bucket succeeded because the policy allowed them. These policies can be useful in situations where you need to control access to resources through VPC endpoints.
-
-
+<Table columnSizing=
