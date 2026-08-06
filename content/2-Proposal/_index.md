@@ -42,6 +42,8 @@ The platform runs on a straightforward AWS stack: end users reach the PHP applic
 - **Monitoring (CloudWatch → SNS)**: Alarms on `CPUUtilization` (EC2), `FreeStorageSpace` and `DatabaseConnections` (RDS) notify the team by email via an SNS topic.
 - **Authentication (Cognito ↔ Google ↔ EC2)**: Browser redirects through Cognito Hosted UI to Google for login; Cognito exchanges the authorization code for tokens server-to-server; the PHP app verifies the JWT, reads the user's group, and — for Admins only — requires a TOTP code (secret stored in RDS, independent of the Google account) before granting a privileged session.
 
+![Approve images](Y.jpg "Approve images")
+
 ### 4. Technical Implementation
 **Implementation Phases**
 The project follows four phases across the internship:

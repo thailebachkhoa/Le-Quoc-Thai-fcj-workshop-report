@@ -43,6 +43,9 @@ Nền tảng chạy trên một kiến trúc AWS đơn giản: người dùng tr
 - **Google Cloud OAuth Client**: Nhà cung cấp danh tính cho tính năng "Đăng nhập bằng Google".
 - **EventBride + Lambda**: Tự động hóa tắt EC2 và RDS theo lịch
 
+![Approve images](Y.jpg "Approve images")
+
+
 ### Thiết kế thành phần
 - **Ứng dụng web (EC2)**: Ứng dụng PHP MVC tự viết — gồm Controllers, Core (middleware Auth, PDO Database singleton, đọc Env, Helpers), Models và Views — phục vụ trang bán hàng, dashboard thành viên và bảng admin.
 - **Database (RDS)**: Lưu sản phẩm, đơn hàng (được tạo qua transaction SQL sau khi kiểm tra lại giá ở server), người dùng, bình luận (có trạng thái kiểm duyệt pending/approved/hidden), tin tức, FAQ và nội dung trang.
