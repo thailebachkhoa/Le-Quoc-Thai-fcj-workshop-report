@@ -6,25 +6,34 @@ chapter: false
 pre: " <b> 6. </b> "
 ---
 
-Throughout my 8-week internship at FCAJ AI Journey Cloud, I had the opportunity to learn, train, and apply the knowledge gained at school to a real-world working environment.  
+{{% notice warning %}}
+⚠️ **Note:** The information below is for reference purposes only. Please **do not copy it verbatim** into your report, including this warning.
+{{% /notice %}}
 
-For the first time, I was exposed to cloud computing, completely dismantling the old mindset of running on localhost just for academic projects, and transitioning to a newer mindset: running products on compute centers for multiple users, while building a stronger real-world product mindset through each event assignment.
+During my internship at **[Company/Organization Name]** from **[start date]** to **[end date]**, I had the opportunity to learn, practice, and apply the knowledge acquired in school to a real-world working environment.  
+I participated in **[briefly describe the main project or task]**, through which I improved my skills in **[list skills: programming, analysis, reporting, communication, etc.]**.  
 
-Regarding conduct, I committed 2 infractions involving personal matters by browsing the web near the end of working hours. Through this, I understood that in work, doing everything right all day can be negated by a single moment of carelessness; high concentration must be maintained at all times to ensure a professional working environment.
+In terms of work ethic, I always strived to complete tasks well, complied with workplace regulations, and actively engaged with colleagues to improve work efficiency.
 
-Based on the final evaluation criteria, I self-assess my overall scores as follows:
+To objectively reflect on my internship period, I would like to evaluate myself based on the following criteria:
 
-1. Attendance score: 0.9 points (due to missing check-in once during the first session)
-2. Attitude score: 1 point (I ensured that I never made disturbing noise around others, never left early, and always used honorifics when communicating with everyone)
-3. Professionalism score: 1 point (clothing was always neat and tidy, always arrived early before 8:45 AM)
-4. Event score: 0.75 points (because I was not yet proactive in asking speakers questions; however, as noted in the event section above, I ensured that I conducted self-study and summarized the topics at home)
-5. Project score: (due to objective reasons and personal capability limitations, I refrain from self-assessing this section)
+| No. | Criteria                            | Description                                                                                      | Good | Fair | Average |
+| --- | ----------------------------------- | ------------------------------------------------------------------------------------------------ | ---- | ---- | ------- |
+| 1   | **Professional knowledge & skills** | Understanding of the field, applying knowledge in practice, proficiency with tools, work quality | ✅    | ☐    | ☐       |
+| 2   | **Ability to learn**                | Ability to absorb new knowledge and learn quickly                                                | ☐    | ✅    | ☐       |
+| 3   | **Proactiveness**                   | Taking initiative, seeking out tasks without waiting for instructions                            | ✅    | ☐    | ☐       |
+| 4   | **Sense of responsibility**         | Completing tasks on time and ensuring quality                                                    | ✅    | ☐    | ☐       |
+| 5   | **Discipline**                      | Adhering to schedules, rules, and work processes                                                 | ☐    | ☐    | ✅       |
+| 6   | **Progressive mindset**             | Willingness to receive feedback and improve oneself                                              | ☐    | ✅    | ☐       |
+| 7   | **Communication**                   | Presenting ideas and reporting work clearly                                                      | ☐    | ✅    | ☐       |
+| 8   | **Teamwork**                        | Working effectively with colleagues and participating in teams                                   | ✅    | ☐    | ☐       |
+| 9   | **Professional conduct**            | Respecting colleagues, partners, and the work environment                                        | ✅    | ☐    | ☐       |
+| 10  | **Problem-solving skills**          | Identifying problems, proposing solutions, and showing creativity                                | ☐    | ✅    | ☐       |
+| 11  | **Contribution to project/team**    | Work effectiveness, innovative ideas, recognition from the team                                  | ✅    | ☐    | ☐       |
+| 12  | **Overall**                         | General evaluation of the entire internship period                                               | ✅    | ☐    | ☐       |
 
-Additionally, a few self-assessed deduction points were also mentioned in the worklog section.
+### Needs Improvement
 
-
-### Areas for Improvement
-
-- Update news and announcements regularly (I encountered a few instances where failing to review updates thoroughly caused me to fall behind the rest of the team)
-- Be more proactive in discussions with speakers
-- Be proactive in moving around after sitting for too long (I experienced some eye health issues after the internship, which served as a valuable lesson no less important than any textbook)
+* Strengthen discipline and strictly comply with the rules and regulations of the company or any organization  
+* Improve problem-solving thinking  
+* Enhance communication skills in both daily interactions and professional contexts, including handling situations effectively
