@@ -10,7 +10,11 @@ pre: " <b> 2. </b> "
 ## Deploying a PHP Plant Shop with Federated Login, Automated Backups, and Monitoring
 
 ### 1. Executive Summary
-Plantify Co is a plant e-commerce and community website for green-lovers, built on a custom PHP MVC application (PDO + MySQL) that already existed as a codebase. The goal of this internship project is not to build the application from scratch, but to take it from "code on a laptop" to a **properly operated cloud service**: hosted on EC2, backed by a managed RDS database, protected by IAM least-privilege roles, backed up automatically to S3, monitored with CloudWatch alarms, and secured with federated login (Amazon Cognito + Google OAuth) plus TOTP two-factor authentication for admin accounts. The result is a small but realistically production-shaped deployment — the kind of stack a small business would actually run — built and operated end-to-end by a single intern within an 8-week window.
+Plantify Co is a plant e-commerce and community website for green-lovers, built on a custom PHP MVC application (PDO + MySQL) that already existed as a codebase. 
+
+**The goal** of this internship project is not to build the application from scratch, but to take it from "code on a laptop" to a **properly operated cloud service**: hosted on EC2, backed by a managed RDS database, protected by IAM least-privilege roles, backed up automatically to S3, monitored with CloudWatch alarms, and secured with federated login (Amazon Cognito + Google OAuth) plus TOTP two-factor authentication for admin accounts. 
+
+The result is a small but realistically production-shaped deployment — the kind of stack a small business would actually run — built and operated end-to-end by a single intern within an 8-week window.
 
 ### 2. Problem Statement
 ### What's the Problem?

@@ -13,7 +13,7 @@ pre: " <b> 2. </b> "
 
 Plantify Co là website bán cây cảnh và cộng đồng cho người yêu cây xanh, xây dựng trên nền ứng dụng PHP MVC tự viết (PDO + MySQL) vốn đã có sẵn template qua các dự án cá nhân. 
 
-Mục tiêu của dự án thực tập không phải là xây dựng ứng dụng Cloud-Native ( dự án phải triển khai song hành với đẩy lên cloud ) mà là phát triển nhanh chóng dựa trên nền tảng mã nguồn mở (Framer Motion, srtdash, E-commerce UI Kit) và kiến trúc phần mềm có sẵn đưa nó từ trạng thái "code chạy trên máy cá nhân" thành một **dịch vụ cloud được vận hành đúng chuẩn**: chạy trên EC2, dùng RDS làm database quản lý, bảo vệ bằng IAM role theo nguyên tắc least-privilege, tự động sao lưu lên S3, giám sát bằng CloudWatch Alarm, và bảo mật đăng nhập bằng Amazon Cognito kết hợp Google OAuth cùng xác thực hai lớp TOTP dành riêng cho tài khoản admin. 
+**Mục tiêu** của dự án thực tập không phải là xây dựng ứng dụng Cloud-Native ( dự án phải triển khai song hành với đẩy lên cloud ) mà là phát triển nhanh chóng dựa trên nền tảng mã nguồn mở (Framer Motion, srtdash, E-commerce UI Kit) và kiến trúc phần mềm có sẵn đưa nó từ trạng thái "code chạy trên máy cá nhân" thành một **dịch vụ cloud được vận hành đúng chuẩn**: chạy trên EC2, dùng RDS làm database quản lý, bảo vệ bằng IAM role theo nguyên tắc least-privilege, tự động sao lưu lên S3, giám sát bằng CloudWatch Alarm, và bảo mật đăng nhập bằng Amazon Cognito kết hợp Google OAuth cùng xác thực hai lớp TOTP dành riêng cho tài khoản admin. 
 
 Kết quả là một hệ thống nhỏ nhưng có hình dáng thực tế của môi trường production — đúng kiểu hạ tầng mà một cửa hàng nhỏ thật sự sẽ vận hành — được xây dựng và triển khai thủ công trong khoảng thời gian 8 tuần.
 
