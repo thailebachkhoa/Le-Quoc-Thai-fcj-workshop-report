@@ -1,3 +1,4 @@
+
 ---
 title: "3 AWS Cost Traps Beginners Easily Fall Into (And How to Avoid Them with Free Tier + Automation)"
 date: 2026-08-04

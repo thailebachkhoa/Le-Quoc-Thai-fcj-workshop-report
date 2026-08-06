@@ -1,46 +1,66 @@
 ---
-title: "CloudWatch Alarms Aren't as Easy as They Seem: The Story of Setting the Greater/Lower Than Condition Backward"
+title: "Amazon Cognito, Explained Properly: User Pools, Hosted UI, Federation, and What the Token Actually Contains"
 date: 2026-08-04
 draft: false
-tags: ["aws", "cloudwatch", "monitoring"]
-description: "A small but easy-to-make configuration error when creating a CloudWatch Alarm to monitor RDS storage, and how to spot and fix it promptly."
+tags: ["aws", "cognito", "identity", "authentication"]
+description: "A ground-up explanation of Amazon Cognito — what it actually is, its two very different halves, how federated login works under the hood, and what's really inside the JWT it hands back to your app."
 ---
 
-## Background
+Amazon Cognito is one of those AWS services that gets used constantly and understood loosely. Most tutorials show you which buttons to click to get Google login working, without explaining what Cognito is actually doing in between. This post is the explanation that would have saved a lot of confusion before building authentication for the Plantify Co project.
 
-After deploying RDS for the Plantify Co project, I wanted an automated alarm when database disk storage runs low — avoiding situations where the database stops writing data without anyone knowing beforehand. CloudWatch Alarm + SNS (email notifications) was the ideal setup for this.
+## First: Cognito Is Two Different Services Wearing One Name
 
-## Initial Setup — and the First Shock
+This is the single most common source of confusion. "Amazon Cognito" bundles two products that solve different problems:
 
-I created an Alarm to monitor the RDS `FreeStorageSpace` metric, setting the threshold to trigger when free storage dropped below 2GB. A few minutes after enabling it, an email landed in my inbox:
+- **User Pools** — a user directory and authentication service. It answers *"who is this person, and how do they prove it?"* It can store users itself, or broker identity from external providers (Google, Facebook, corporate SAML/OIDC IdPs). This is what handles login screens, passwords, MFA, and federated sign-in.
+- **Identity Pools** — a way to hand out **temporary AWS credentials** to your app's users, so a mobile or web app can call AWS services (like S3) directly, without your backend acting as a middleman. It answers *"now that I know who you are, what AWS permissions should you get?"*
 
+A huge number of projects — including Plantify Co — only ever need **User Pools**. If you're not letting end users' browsers call AWS APIs directly, you can safely ignore Identity Pools entirely and a lot of Cognito's reputation for being "confusing" disappears.
+
+## Inside a User Pool: The Building Blocks
+
+- **User Pool** — the directory itself. Holds user records, their attributes (email, name...), and settings like password policy or MFA requirements.
+- **App Client** — represents *an application* that's allowed to authenticate against the pool. A single User Pool can have multiple App Clients (e.g. a web app and a mobile app), each with its own allowed callback URLs, OAuth scopes, and allowed Identity Providers. This separation is why forgetting to enable an Identity Provider on the *App Client* — even after adding it to the User Pool — is such a common setup mistake: the pool level and client level are configured independently.
+- **Domain (Hosted UI)** — a ready-made login page hosted by AWS at `<prefix>.auth.<region>.amazoncognito.com`, so you don't have to build your own login form to start the OAuth2 flow.
+- **Identity Providers** — external services (Google, Facebook, an SSO provider...) that Cognito can delegate authentication to, instead of managing a password itself.
+- **Groups** — a simple way to tag users with roles (e.g. `Admin`, `Member`); group membership shows up directly inside the issued token.
+
+## How Federated Login Actually Flows
+
+When a user signs in via Google through Cognito, four parties are involved, and it's worth being precise about who talks to whom:
+
+1. **Your app → Cognito**: redirects the browser to Cognito's Hosted UI, optionally specifying `identity_provider=Google` to skip straight to Google instead of showing Cognito's own picker.
+2. **Cognito → Google**: redirects the browser again, this time to Google's actual consent screen. Your app is not involved in this step at all.
+3. **Google → Cognito**: after the user approves, Google sends an authorization code back — but to *Cognito's* redirect URI, not your app's. Cognito then calls Google's token endpoint server-to-server to exchange that code for Google's tokens, and either creates or matches a user record in the User Pool.
+4. **Cognito → your app**: redirects the browser one final time, to *your app's* callback URL, with a Cognito-issued authorization code. Your app exchanges this for Cognito's own tokens.
+
+The key thing this reveals: your application never sees Google's tokens or the user's Google password at any point. It only ever receives tokens **issued by Cognito**, which is precisely why verifying those tokens correctly matters — your app is trusting Cognito's word, not Google's directly.
+
+## What's Actually Inside the Token
+
+Cognito issues a JSON Web Token (JWT) — a signed, three-part string (`header.payload.signature`). The payload is a set of claims, and for a federated login it typically includes:
+
+```json
+{
+  "sub": "a1b2c3d4-...",
+  "iss": "https://cognito-idp.<region>.amazonaws.com/<user-pool-id>",
+  "aud": "<app-client-id>",
+  "token_use": "id",
+  "email": "user@gmail.com",
+  "name": "User Name",
+  "cognito:groups": ["Admin"],
+  "exp": 1735689600
+}
 ```
-ALARM: "Plantify-RDS-LowStorage" in Asia Pacific (Singapore)
-Reason: Threshold Crossed: 1.95011616768E10 was greater than the threshold (2.0E9)
-```
 
-Translated into plain English: current free storage (~19.5GB) was **greater than** the 2GB threshold — and the Alarm triggered because the condition was set to... **"Greater than"** instead of **"Lower than"**. In other words, I accidentally configured it as: "alert when free space EXCEEDS 2GB" — and since the database almost always has more than 2GB free, the Alarm fired immediately even though nothing was wrong.
+A correct verification checks more than "does this string decode into JSON" — it must confirm: the **signature** is valid against Cognito's public keys (JWKS), `iss` matches your exact User Pool, `aud` matches your exact App Client, and `token_use` is the token type you expect (`id` vs `access` tokens serve different purposes and shouldn't be treated interchangeably). Skipping any of these checks means your app would accept a token forged for a *different* app client or a *different* pool — decoding a JWT without verifying it is functionally the same as not checking authentication at all.
 
-## Why This Mistake Is Easy to Make
+## What Cognito Is Genuinely Good At (and What It Isn't)
 
-When creating an Alarm in the CloudWatch Console, the "Conditions" section lets you choose between operators: Greater than, Greater than or equal, Lower than, Lower than or equal. For certain metrics (like high CPU usage being bad → Greater Than is intuitive), but for other metrics (like low free storage being bad → you must use Lower Than), picking the wrong operator is easy to do if you don't pause to think carefully about what the metric actually measures before selecting a condition.
+**Strong fit**: standardizing OAuth2/OIDC so you don't hand-roll it per provider, centralizing user/group management, and giving you a Hosted UI so a working login screen exists on day one.
 
-## How to Spot and Fix It
+**Not a fit**: anything requiring per-user or per-group logic layered *into* the authentication step itself — Cognito's MFA, for instance, applies at the User Pool level, not per group, and doesn't compose cleanly with federated logins. Read [Blog 1](../3.1-Blog1/) if you also want to see how Plantify Co used an IAM Role instead of Cognito Identity Pools to let EC2 talk to S3 — a good example of picking the right AWS identity tool for the right layer of a system, rather than reaching for the same one everywhere.
 
-Read the alert email carefully — CloudWatch always clearly details the actual value, threshold set, and operator used in the "Reason for State Change" section. This was where the root cause stood out: the actual value and threshold weren't bad in a real-world sense; the comparison operator was just pointing in the wrong direction.
+## Takeaway
 
-Back in the Alarm settings, update:
-```
-Before: Whenever FreeStorageSpace is Greater than 2000000000
-After:  Whenever FreeStorageSpace is Lower than 2000000000
-```
-
-After saving the fix, the Alarm automatically returned to the **OK** state within a few minutes — confirming that the Alarm functions properly in both directions: triggering when there's an issue and recovering automatically when the issue resolves.
-
-## Key Takeaways
-
-- **Always carefully read the alert email/log content** instead of panicking at the red "ALARM" label — the "Reason for State Change" section always explains precisely what happened.
-- **Test both ways before trusting in production**: Don't just verify that the Alarm triggers; make sure it turns off (returns to OK) when the condition resolves.
-- For every metric, pause for 5 seconds to ask yourself: "Is a high value good or bad?" before picking Greater/Lower Than — for `FreeStorageSpace`, high is good (plenty of free space) so you alert when **low**; for `CPUUtilization`, high is bad (overloaded) so you alert when **high**. Simple as it sounds, it's remarkably easy to mix up when rushing through the Console.
-
-A small error, easy to fix, but if you don't read the logs closely, it can confuse beginners or — worse — lead them to mute Alarms thinking they're "false alarms," when it was just configured in the wrong direction.
+Cognito is less mysterious once you stop treating it as one black box and start treating it as: a user directory (User Pools) that can delegate to external providers, wrapped in a standard OAuth2 flow, issuing a JWT that your app is responsible for verifying properly. Most Cognito confusion — including a fair share of the debugging done on this project — traces back to blurring those pieces together instead of reasoning about them one at a time.

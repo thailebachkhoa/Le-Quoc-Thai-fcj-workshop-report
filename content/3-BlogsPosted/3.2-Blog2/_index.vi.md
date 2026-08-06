@@ -1,3 +1,4 @@
+
 ---
 title: "3 cái bẫy chi phí AWS mà tân binh dễ dính (và cách né bằng Free Tier + tự động hoá)"
 date: 2026-08-04

@@ -1,3 +1,4 @@
+
 ---
 title: "Published Blog Posts"
 date: 2024-01-01
@@ -14,5 +15,6 @@ This blog demonstrates how to attach an IAM Role directly to an EC2 instance to 
 ###  [Blog 2 - 3 AWS Cost Traps Beginners Easily Fall Into (And How to Avoid Them with Free Tier + Automation)](3.2-Blog2/)
 This blog shares 3 real-world scenarios that can easily lead to unexpected costs when deploying personal projects on AWS: public IPv4/Elastic IP policy changes, creating S3 buckets in the wrong Region, and leaving EC2/RDS running 24/7. It also guides you on how to avoid these issues using the Free Tier, automating start/stop schedules with Lambda + EventBridge Scheduler, and setting up safety nets with AWS Budgets.
 
-###  [Blog 3 - CloudWatch Alarms Aren't as Easy as They Seem: The Story of Setting the Greater/Lower Than Condition Backward](3.3-Blog3/)
-This blog analyzes a small but common configuration mistake when creating a CloudWatch Alarm to monitor RDS storage (`FreeStorageSpace`) by mistakenly selecting the "Greater Than" condition instead of "Lower Than". It shares key insights on reading alert logs from email, how to fix the issue, and lessons learned on testing Alarms bidirectionally before going into production.
+
+###  [Blog 3 - Amazon Cognito, Explained Properly: User Pools, Hosted UI, Federation, and What the Token Actually Contains](3.3-Blog3/)
+A ground-up explainer of Amazon Cognito: the difference between User Pools and Identity Pools, the building blocks inside a User Pool (App Client, Domain, Identity Providers, Groups), a step-by-step walkthrough of who talks to whom during a federated Google login, what claims actually live inside the issued JWT, and what proper token verification requires beyond just decoding it.

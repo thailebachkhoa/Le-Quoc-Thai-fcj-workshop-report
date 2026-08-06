@@ -1,46 +1,66 @@
 ---
-title: "CloudWatch Alarm tưởng dễ mà không dễ: câu chuyện set ngược điều kiện Greater/Lower Than"
+title: "Amazon Cognito, giải thích cho đàng hoàng: User Pool, Hosted UI, Federation, và trong token thật sự có gì"
 date: 2026-08-04
 draft: false
-tags: ["aws", "cloudwatch", "monitoring"]
-description: "Một lỗi cấu hình nhỏ nhưng dễ mắc khi tạo CloudWatch Alarm giám sát dung lượng RDS, và cách phát hiện, sửa kịp thời."
+tags: ["aws", "cognito", "identity", "authentication"]
+description: "Giải thích từ gốc về Amazon Cognito — nó thực chất là gì, 2 nửa rất khác nhau bên trong nó, đăng nhập liên kết hoạt động ra sao phía sau hậu trường, và trong JWT nó trả về thật sự chứa gì."
 ---
 
-## Bối cảnh
+Amazon Cognito là kiểu dịch vụ AWS bị dùng rất nhiều nhưng hiểu rất mơ hồ. Đa số hướng dẫn chỉ chỉ bạn bấm nút nào để có đăng nhập Google chạy được, mà không giải thích Cognito thực sự đang làm gì ở giữa. Bài này là phần giải thích lẽ ra nên đọc trước khi bắt tay xây dựng xác thực cho dự án Plantify Co, để đỡ tốn thời gian nhầm lẫn.
 
-Sau khi triển khai RDS cho dự án Plantify Co, mình muốn có cảnh báo tự động khi dung lượng ổ đĩa database sắp hết — tránh tình huống database ngừng ghi được dữ liệu mà không ai biết trước. CloudWatch Alarm + SNS (gửi email) là công cụ hợp lý cho việc này.
+## Trước tiên: Cognito là 2 dịch vụ khác nhau đội chung 1 cái tên
 
-## Cấu hình ban đầu — và cú sốc đầu tiên
+Đây là nguồn nhầm lẫn phổ biến nhất. "Amazon Cognito" thực chất gộp 2 sản phẩm giải quyết 2 bài toán khác hẳn nhau:
 
-Tạo Alarm theo dõi metric `FreeStorageSpace` của RDS, đặt ngưỡng cảnh báo khi dung lượng trống dưới 2GB. Vài phút sau khi bật, một email ập tới:
+- **User Pools** — dịch vụ quản lý danh mục user và xác thực. Trả lời câu *"đây là ai, và họ chứng minh điều đó bằng cách nào?"*. Nó có thể tự lưu user, hoặc làm trung gian lấy danh tính từ nhà cung cấp ngoài (Google, Facebook, SAML/OIDC doanh nghiệp). Đây là phần lo màn hình đăng nhập, mật khẩu, MFA, và đăng nhập liên kết.
+- **Identity Pools** — cách để cấp **credential AWS tạm thời** cho user của app bạn, để app mobile/web gọi thẳng dịch vụ AWS (như S3) mà không cần backend làm trung gian. Trả lời câu *"giờ đã biết đây là ai rồi, thì họ được cấp quyền AWS gì?"*.
 
+Rất nhiều dự án — kể cả Plantify Co — chỉ cần đúng **User Pools**. Nếu bạn không cho trình duyệt của user gọi thẳng API AWS, có thể bỏ qua Identity Pools hoàn toàn, và phần lớn tiếng xấu "Cognito khó hiểu" cũng biến mất theo.
+
+## Bên trong 1 User Pool: các thành phần chính
+
+- **User Pool** — chính là "danh bạ" user. Lưu bản ghi user, thuộc tính của họ (email, tên...), và cấu hình như chính sách mật khẩu hay yêu cầu MFA.
+- **App Client** — đại diện cho *1 ứng dụng* được phép xác thực với pool đó. 1 User Pool có thể có nhiều App Client (ví dụ 1 web app và 1 mobile app), mỗi cái có riêng callback URL được phép, OAuth scope, và danh sách Identity Provider được bật. Đây là lý do vì sao quên bật Identity Provider ở cấp *App Client* — dù đã thêm nó vào User Pool rồi — là lỗi cấu hình cực kỳ hay gặp: cấp pool và cấp client được cấu hình **độc lập** với nhau.
+- **Domain (Hosted UI)** — 1 trang đăng nhập dựng sẵn do AWS host tại `<prefix>.auth.<region>.amazoncognito.com`, để bạn không phải tự xây form đăng nhập chỉ để bắt đầu luồng OAuth2.
+- **Identity Providers** — dịch vụ ngoài (Google, Facebook, 1 nhà cung cấp SSO...) mà Cognito có thể uỷ quyền việc xác thực, thay vì tự quản lý mật khẩu.
+- **Groups** — cách đơn giản để gắn vai trò cho user (ví dụ `Admin`, `Member`); việc thuộc group nào sẽ hiện thẳng trong token phát hành ra.
+
+## Luồng đăng nhập liên kết thật sự diễn ra thế nào
+
+Khi user đăng nhập qua Google thông qua Cognito, có 4 bên tham gia, và cần chính xác ai nói chuyện với ai:
+
+1. **App của bạn → Cognito**: redirect trình duyệt sang Hosted UI của Cognito, có thể kèm `identity_provider=Google` để nhảy thẳng sang Google, bỏ qua màn chọn của Cognito.
+2. **Cognito → Google**: redirect trình duyệt tiếp, lần này sang đúng màn hình cấp quyền thật của Google. App của bạn hoàn toàn không tham gia bước này.
+3. **Google → Cognito**: sau khi user đồng ý, Google gửi 1 authorization code về — nhưng về đúng redirect URI của *Cognito*, không phải của app bạn. Cognito sau đó tự gọi ngầm (server-to-server) sang endpoint token của Google để đổi code đó lấy token của Google, rồi tạo hoặc khớp 1 bản ghi user trong User Pool.
+4. **Cognito → app của bạn**: redirect trình duyệt lần cuối, về đúng callback URL của *app bạn*, kèm 1 authorization code do Cognito phát hành. App bạn đổi code này lấy token của chính Cognito.
+
+Điểm mấu chốt lộ ra ở đây: ứng dụng của bạn **không bao giờ** thấy được token của Google hay mật khẩu Google của user, tại bất kỳ thời điểm nào. Nó chỉ nhận được token **do Cognito phát hành** — đây chính xác là lý do vì sao verify đúng token đó lại quan trọng đến vậy: app bạn đang tin lời của Cognito, không phải tin trực tiếp Google.
+
+## Trong token thật sự có gì
+
+Cognito phát hành JSON Web Token (JWT) — 1 chuỗi 3 phần đã ký (`header.payload.signature`). Phần payload là tập hợp các claim, và với đăng nhập liên kết thường có dạng:
+
+```json
+{
+  "sub": "a1b2c3d4-...",
+  "iss": "https://cognito-idp.<region>.amazonaws.com/<user-pool-id>",
+  "aud": "<app-client-id>",
+  "token_use": "id",
+  "email": "user@gmail.com",
+  "name": "User Name",
+  "cognito:groups": ["Admin"],
+  "exp": 1735689600
+}
 ```
-ALARM: "Plantify-RDS-LowStorage" in Asia Pacific (Singapore)
-Reason: Threshold Crossed: 1.95011616768E10 was greater than the threshold (2.0E9)
-```
 
-Dịch lại: dung lượng trống hiện tại (~19.5GB) **lớn hơn** ngưỡng 2GB — và Alarm báo động vì điều kiện đang là... **"Greater than"** (lớn hơn) thay vì **"Lower than"** (thấp hơn). Nói cách khác, mình vô tình cấu hình: "báo động khi dung lượng trống VƯỢT QUÁ 2GB" — mà database gần như lúc nào cũng có nhiều hơn 2GB trống, nên Alarm kêu ngay lập tức dù chẳng có sự cố gì cả.
+Verify đúng cách phải kiểm tra nhiều hơn là "chuỗi này có decode ra JSON không" — cần xác nhận: **chữ ký** hợp lệ theo public key của Cognito (JWKS), `iss` khớp đúng User Pool của bạn, `aud` khớp đúng App Client của bạn, và `token_use` đúng loại token mong đợi (token `id` và `access` phục vụ mục đích khác nhau, không nên dùng lẫn lộn). Bỏ qua bất kỳ bước nào trong số này nghĩa là app bạn có thể chấp nhận 1 token bị giả mạo cho *app client khác* hoặc *pool khác* — decode JWT mà không verify về bản chất chẳng khác gì không kiểm tra xác thực gì cả.
 
-## Vì sao dễ mắc lỗi này
+## Cognito thật sự mạnh ở đâu, và không hợp ở đâu
 
-Khi tạo Alarm trong CloudWatch Console, phần "Conditions" cho bạn chọn giữa các operator: Greater than, Greater than or equal, Lower than, Lower than or equal. Với một số metric (như CPU cao là xấu → dùng Greater Than là trực giác), nhưng với metric khác (như dung lượng trống thấp là xấu → phải dùng Lower Than), việc chọn nhầm operator rất dễ xảy ra nếu không dừng lại suy nghĩ kỹ ý nghĩa của từng metric trước khi chọn điều kiện.
+**Hợp**: chuẩn hoá OAuth2/OIDC để không phải tự viết riêng cho từng nhà cung cấp, tập trung quản lý user/group ở 1 chỗ, và có sẵn Hosted UI nên ngay ngày đầu đã có màn đăng nhập chạy được.
 
-## Cách phát hiện và sửa
+**Không hợp**: bất kỳ logic nào cần áp dụng riêng theo từng user/nhóm *ngay trong* bước xác thực — ví dụ MFA của Cognito áp dụng ở cấp User Pool, không theo từng nhóm, và không ghép trơn tru với đăng nhập liên kết. Đọc thêm [Blog 1](../3.1-Blog1/) nếu muốn xem cách Plantify Co dùng IAM Role thay vì Cognito Identity Pools để cho EC2 nói chuyện với S3 — 1 ví dụ tốt về việc chọn đúng công cụ định danh AWS cho đúng tầng của hệ thống, thay vì dùng 1 công cụ cho mọi việc.
 
-Đọc kỹ nội dung email cảnh báo — CloudWatch luôn ghi rõ giá trị thực tế, ngưỡng đặt ra, và operator đang dùng trong phần "Reason for State Change". Đây chính là chỗ phát hiện ra vấn đề: giá trị thực tế và ngưỡng không hề "xấu" theo nghĩa thông thường, chỉ là điều kiện so sánh bị đặt sai chiều.
+## Tổng kết
 
-Vào lại Alarm, sửa:
-```
-Trước: Whenever FreeStorageSpace is Greater than 2000000000
-Sau:   Whenever FreeStorageSpace is Lower than 2000000000
-```
-
-Sau khi sửa, Alarm tự động chuyển về trạng thái **OK** trong vài phút — đây cũng là cách xác nhận Alarm hoạt động đúng cả 2 chiều: biết báo động khi có vấn đề, và biết tự phục hồi khi vấn đề không còn.
-
-## Bài học rút ra
-
-- **Luôn đọc kỹ nội dung email/log cảnh báo** thay vì chỉ nhìn thấy chữ "ALARM" màu đỏ rồi hoảng — phần "Reason for State Change" luôn cho biết chính xác điều gì đang xảy ra.
-- **Test cả 2 chiều trước khi tin tưởng vận hành thật**: không chỉ kiểm tra Alarm có kích hoạt được không, mà còn phải kiểm tra nó có tự tắt (trở về OK) đúng khi điều kiện không còn nữa.
-- Với mỗi metric, dừng lại 5 giây để tự hỏi: "giá trị cao là tốt hay xấu?" trước khi chọn Greater/Lower Than — với `FreeStorageSpace`, cao là tốt (còn nhiều chỗ trống) nên phải cảnh báo khi **thấp**; với `CPUUtilization`, cao là xấu (quá tải) nên cảnh báo khi **cao**. Nghe đơn giản nhưng rất dễ lẫn lộn lúc đang thao tác nhanh trên Console.
-
-Một lỗi nhỏ, dễ sửa, nhưng nếu không để ý kỹ nội dung log, có thể khiến người mới bối rối hoặc — tệ hơn — tắt hẳn Alarm vì nghĩ nó "báo động vớ vẩn", trong khi vấn đề chỉ là cấu hình sai chiều so sánh.
+Cognito bớt bí ẩn hẳn khi ngừng coi nó là 1 hộp đen duy nhất, mà coi nó là: 1 danh bạ user (User Pools) có thể uỷ quyền cho nhà cung cấp ngoài, bọc trong 1 luồng OAuth2 chuẩn, phát hành ra JWT mà app bạn có trách nhiệm tự verify cho đúng. Phần lớn nhầm lẫn về Cognito — kể cả không ít lần debug trong chính dự án này — đều bắt nguồn từ việc gộp lẫn các mảnh đó lại với nhau thay vì suy luận từng mảnh một cách tách bạch.
