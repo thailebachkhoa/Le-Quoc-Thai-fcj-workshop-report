@@ -6,9 +6,6 @@ chapter: false
 pre: " <b> 2. </b> "
 ---
 
-
-Tại phần này, bạn cần tóm tắt các nội dung trong workshop mà bạn **dự tính** sẽ làm.
-
 # Plantify Co — Nền tảng thương mại điện tử được vận hành an toàn trên AWS
 ## Triển khai website bán cây cảnh PHP với đăng nhập liên kết, sao lưu tự động và giám sát hệ thống
 
