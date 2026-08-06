@@ -41,4 +41,4 @@ pre: " <b> 1.1. </b> "
 
 ### Limitations:
 
-* Haven't yet learned AWS CLI and Lambda, so the project's core architecture is tightly fixed to EC2 -> will face difficulties with scalability if traffic spikes suddenly (analyzed further in the final self-evaluation, Week 8).
+* Haven't yet learned Lambda, so the project's core architecture is tightly fixed to EC2 -> will face difficulties with scalability if traffic spikes suddenly (analyzed further in the final self-evaluation, Week 8).

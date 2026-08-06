@@ -41,4 +41,4 @@ pre: " <b> 1.1. </b> "
 
 ### Hạn chế:
 
-* Chưa học AWS CLI và Lambda, nên kiến trúc lõi của dự án đang cố định vào EC2 -> sẽ gặp khó khăn về khả năng mở rộng nếu traffic tăng đột biến (đã phân tích rõ hơn ở phần đánh giá cuối dự án, Tuần 8).
+* Chưa học Lambda, nên kiến trúc lõi của dự án đang cố định vào EC2 -> sẽ gặp khó khăn về khả năng mở rộng nếu traffic tăng đột biến (đã phân tích rõ hơn ở phần đánh giá cuối dự án, Tuần 8).
