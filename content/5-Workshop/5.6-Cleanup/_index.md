@@ -1,10 +1,9 @@
 ---
-
 title: "6. Replacing authentication with Cognito, Google OAuth, and TOTP"
 weight: 6
 date: 2026-08-05
 draft: false
-------------
+---
 
 ## 6.1. Authentication architecture
 
