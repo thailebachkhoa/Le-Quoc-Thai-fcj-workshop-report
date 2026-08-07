@@ -41,32 +41,8 @@ No prior knowledge of Terraform, AWS CDK, Docker, or Kubernetes is required. Thi
 
 ## AWS infrastructure
 
-```text
-Client (HTTPS)
-    │
-    ▼
-Internet Gateway
-    │
-    ▼
-┌──────────────────────── VPC (ap-southeast-1) ────────────────────────┐
-│                                                                       │
-│  ┌── Public Subnet ──┐          ┌── Private Subnet ──┐               │
-│  │   EC2 (t3.micro)   │  SQL     │  RDS (db.t4g.micro) │               │
-│  │   Apache + PHP     │─────────▶│  MySQL (Public: No) │               │
-│  │   + ffmpeg         │          │                     │               │
-│  └─────────┬──────────┘          └──────────┬──────────┘               │
-│            │ IAM Role                        │ Metrics                 │
-│            ▼                                 ▼                         │
-│      S3 (backup storage)                CloudWatch ─▶ SNS ─▶ Email     │
-│                                                                       │
-└───────────────────────────────────────────────────────────────────────┘
-
-Lambda (plantify-scheduler)
-          ▲
-          │
-EventBridge Scheduler (4 start/stop schedules)
-
-Cognito User Pool ◀──── OAuth ────▶ Google Cloud Identity Provider
+```
+![Approve images](Y.jpg "Approve images")
 ```
 
 ## AWS services and responsibilities

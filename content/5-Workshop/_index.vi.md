@@ -42,28 +42,7 @@ Không cần biết trước: Terraform/CDK (workshop này làm tay qua Console 
 ### Sơ đồ hạ tầng AWS
 
 ```
-Client (HTTPS)
-    │
-    ▼
-Internet Gateway
-    │
-    ▼
-┌─────────────────────── VPC (ap-southeast-1) ───────────────────────┐
-│                                                                      │
-│  ┌── Public Subnet ──┐          ┌── Private Subnet ──┐              │
-│  │   EC2 (t3.micro)   │  SQL     │  RDS (db.t4g.micro) │              │
-│  │   Apache + PHP     │─────────▶│  MySQL, Public: No  │              │
-│  │   + ffmpeg         │          │                     │              │
-│  └─────────┬──────────┘          └──────────┬──────────┘              │
-│            │ IAM Role                        │ Metric                 │
-│            ▼                                 ▼                        │
-│      S3 (backup)                        CloudWatch ──▶ SNS ──▶ Email  │
-│                                                                        │
-└────────────────────────────────────────────────────────────────────┘
-
-Lambda (plantify-scheduler) ◀── EventBridge Scheduler (4 lịch: start/stop)
-
-Cognito User Pool ◀──OAuth──▶ Google Cloud (Identity Provider)
+![Approve images](Y.jpg "Approve images")
 ```
 
 ### Bảng dịch vụ và vai trò
