@@ -91,5 +91,5 @@ The workshop is divided into **seven parts**, following the exact order in which
 5. **Automating cost optimization with Lambda and EventBridge**
 6. **Replacing authentication with Cognito, Google OAuth, and TOTP MFA**
 7. **Fixing mobile UI issues and cleaning up unused code**
-
+8. **Clean up**
 Each module includes a **Common issues** section that documents the actual errors encountered during deployment and how they were resolved, allowing readers to avoid repeating the same troubleshooting process.

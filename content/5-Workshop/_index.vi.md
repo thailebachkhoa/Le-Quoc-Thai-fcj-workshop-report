@@ -84,5 +84,5 @@ Chia thành 7 phần theo đúng trình tự đã thực hiện — mỗi phần
 5. **Tự động hoá tiết kiệm chi phí: Lambda + EventBridge**
 6. **Thay thế Auth bằng Cognito + Google OAuth + TOTP**
 7. **Vá lỗi UI mobile và dọn dẹp code thừa**
-
+8. **Dọn dẹp**
 Mỗi phần đều có mục **"Lỗi thường gặp"** ghi lại nguyên văn lỗi thật đã xảy ra trong quá trình làm, để người đọc theo sau không mất thời gian mò lại từ đầu.
