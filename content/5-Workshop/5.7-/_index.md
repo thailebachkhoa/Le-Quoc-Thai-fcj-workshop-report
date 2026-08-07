@@ -4,7 +4,7 @@ title: "7. Fixing mobile UI issues and removing unused code"
 weight: 7
 date: 2026-08-05
 draft: false
-------------
+---
 
 ## 7.1. Horizontal overflow on mobile
 
