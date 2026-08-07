@@ -49,6 +49,7 @@ Nền tảng chạy trên một kiến trúc AWS đơn giản: người dùng tr
 - **Pipeline sao lưu (EC2 → IAM → S3)**: Cron job theo lịch (`0 2 * * *`) chạy `mysqldump --single-transaction`, lưu file `.sql` có timestamp, rồi tải lên S3 thông qua IAM role của instance.
 - **Giám sát (CloudWatch → SNS)**: Alarm trên `CPUUtilization` (EC2), `FreeStorageSpace` và `DatabaseConnections` (RDS) gửi thông báo qua email tới nhóm bằng SNS topic.
 - **Xác thực (Cognito ↔ Google ↔ EC2)**: Trình duyệt được chuyển hướng qua Cognito Hosted UI sang Google để đăng nhập; Cognito đổi authorization code lấy token ở phía server; ứng dụng PHP xác minh JWT, đọc nhóm người dùng, và — chỉ với Admin — yêu cầu thêm mã TOTP (secret lưu trong RDS, độc lập với tài khoản Google) trước khi cấp phiên đăng nhập có quyền cao.
+- **Tự động hoá tài nguyên (EventBridge → Lambda → EC2/RDS)**: EventBridge Scheduler kích hoạt Lambda function `plantify-scheduler` theo 4 lịch cố định mỗi ngày (08:00 bật, 17:30 tắt, 20:00 bật, 00:00 tắt — múi giờ UTC+7); Lambda dùng `boto3` gọi `start_instances`/`stop_instances` cho EC2 và `start_db_instance`/`stop_db_instance` cho RDS, bọc `try/except InvalidDBInstanceStateFault` để không lỗi khi tài nguyên đã ở đúng trạng thái. IAM Role riêng cho Lambda (`PlantifySchedulerRole`) chỉ được phép thao tác trên đúng 1 instance EC2 và 1 DB instance cụ thể — không có quyền đụng vào tài nguyên AWS nào khác trong tài khoản.
 
 ### 4. Triển khai kỹ thuật
 *Các giai đoạn triển khai*

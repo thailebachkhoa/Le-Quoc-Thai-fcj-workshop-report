@@ -45,7 +45,7 @@ The platform runs on a straightforward AWS stack: end users reach the PHP applic
 - **Backup Pipeline (EC2 → IAM → S3)**: A scheduled cron job (`0 2 * * *`) runs `mysqldump --single-transaction`, saves a timestamped `.sql` file, and uploads it to S3 through the instance's IAM role.
 - **Monitoring (CloudWatch → SNS)**: Alarms on `CPUUtilization` (EC2), `FreeStorageSpace` and `DatabaseConnections` (RDS) notify the team by email via an SNS topic.
 - **Authentication (Cognito ↔ Google ↔ EC2)**: Browser redirects through Cognito Hosted UI to Google for login; Cognito exchanges the authorization code for tokens server-to-server; the PHP app verifies the JWT, reads the user's group, and — for Admins only — requires a TOTP code (secret stored in RDS, independent of the Google account) before granting a privileged session.
-
+- **Resource automation (EventBridge → Lambda → EC2/RDS)**: EventBridge Scheduler triggers the `plantify-scheduler` Lambda function on four fixed daily schedules (08:00 start, 17:30 stop, 20:00 start, 00:00 stop — UTC+7); Lambda uses `boto3` to call `start_instances`/`stop_instances` for EC2 and `start_db_instance`/`stop_db_instance` for RDS, wrapping `InvalidDBInstanceStateFault` in a `try/except` block so no error is thrown when a resource is already in the target state. A dedicated IAM Role (`PlantifySchedulerRole`) restricts Lambda to exactly one EC2 instance and one RDS DB instance — no access to any other AWS resource in the account.
 ![Approve images](Y.jpg "Approve images")
 
 ### 4. Technical Implementation
