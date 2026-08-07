@@ -41,9 +41,9 @@ No prior knowledge of Terraform, AWS CDK, Docker, or Kubernetes is required. Thi
 
 ## AWS infrastructure
 
-```
+
 ![Approve images](Y.jpg "Approve images")
-```
+
 
 ## AWS services and responsibilities
 

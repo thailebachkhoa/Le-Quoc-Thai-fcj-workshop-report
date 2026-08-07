@@ -41,9 +41,9 @@ Không cần biết trước: Terraform/CDK (workshop này làm tay qua Console 
 
 ### Sơ đồ hạ tầng AWS
 
-```
+
 ![Approve images](Y.jpg "Approve images")
-```
+
 
 ### Bảng dịch vụ và vai trò
 
