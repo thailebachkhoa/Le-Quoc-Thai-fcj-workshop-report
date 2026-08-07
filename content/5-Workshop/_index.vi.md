@@ -77,12 +77,12 @@ Trình duyệt → index.php (router) → Controller (Auth + Csrf check)
 
 Chia thành 7 phần theo đúng trình tự đã thực hiện — mỗi phần là 1 trang riêng, có thể đọc tuần tự hoặc nhảy tới phần cần tham khảo:
 
-1. [Rà soát và vá bảo mật code trước khi lên cloud](01-security-hardening/)
-2. [Dựng hạ tầng cơ bản: EC2 + RDS](02-ec2-rds-setup/)
-3. [Mở rộng dịch vụ: S3, IAM, CloudWatch](03-s3-iam-cloudwatch/)
-4. [Domain, HTTPS, Elastic IP](04-https-elastic-ip/)
-5. [Tự động hoá tiết kiệm chi phí: Lambda + EventBridge](05-lambda-eventbridge/)
-6. [Thay thế Auth bằng Cognito + Google OAuth + TOTP](06-cognito-google-totp/)
-7. [Vá lỗi UI mobile và dọn dẹp code thừa](07-mobile-fix-cleanup/)
+1. **Rà soát và vá bảo mật code trước khi lên cloud**
+2. **Dựng hạ tầng cơ bản: EC2 + RDS**
+3. **Mở rộng dịch vụ: S3, IAM, CloudWatch**
+4. **Domain, HTTPS, Elastic IP**
+5. **Tự động hoá tiết kiệm chi phí: Lambda + EventBridge**
+6. **Thay thế Auth bằng Cognito + Google OAuth + TOTP**
+7. **Vá lỗi UI mobile và dọn dẹp code thừa**
 
 Mỗi phần đều có mục **"Lỗi thường gặp"** ghi lại nguyên văn lỗi thật đã xảy ra trong quá trình làm, để người đọc theo sau không mất thời gian mò lại từ đầu.
